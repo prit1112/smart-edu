@@ -23,6 +23,17 @@ const homeworkStorage = multer.diskStorage({
   }
 });
 
+// Storage for avatar uploads
+const avatarStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images/avatars/");
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
 // File filter for notes (PDF only)
 const notesFileFilter = (req, file, cb) => {
   if (file.mimetype === "application/pdf") {
@@ -51,6 +62,16 @@ const homeworkFileFilter = (req, file, cb) => {
   }
 };
 
+// File filter for avatars (images only)
+const avatarFileFilter = (req, file, cb) => {
+  const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+  if (allowedMimes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Invalid file type. Only images (JPG, PNG, GIF, WebP) are allowed for avatars!"), false);
+  }
+};
+
 // Upload configurations
 const uploadNotes = multer({
   storage: notesStorage,
@@ -68,6 +89,14 @@ const uploadHomework = multer({
   }
 });
 
-// Export both upload configurations
-export { uploadNotes, uploadHomework };
+const uploadAvatar = multer({
+  storage: avatarStorage,
+  fileFilter: avatarFileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit for avatars
+  }
+});
+
+// Export all upload configurations
+export { uploadNotes, uploadHomework, uploadAvatar };
 export default uploadNotes; // Keep backward compatibility

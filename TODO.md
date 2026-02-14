@@ -1,21 +1,13 @@
-# TODO - Update Videos and MCQ Routes
+# Avatar Feature Implementation TODO
 
-## Task
-Update the videos route and MCQ route to use the EJS templates instead of inline HTML rendering.
+## Steps to Complete:
 
-## Steps
+- [ ] 1. Create public/images/avatars folder with default avatars (SVG-based)
+- [ ] 2. Add avatar field to User model (models/User.js)
+- [ ] 3. Add avatar upload configuration (config/upload.js)
+- [ ] 4. Create student profile route (routes/student.routes.js)
+- [ ] 5. Create profile page (views/student/profile.ejs)
+- [ ] 6. Update dashboard to make avatar clickable (views/student/dashboard.ejs)
+- [ ] 7. Add API endpoint for avatar selection/upload
 
-- [ ] Update `/admin/videos/:chapterId` route to render `admin/videos` EJS template
-- [ ] Add delete video route (`/admin/delete-video/:videoId`)
-- [ ] Update `/admin/mcq/:chapterId` route to render `admin/mcq` EJS template
-
-## Progress
-
-### Step 1: Videos Route
-- [ ] Update videos route to use EJS template
-
-### Step 2: Delete Video Route  
-- [ ] Add delete video route
-
-### Step 3: MCQ Route
-- [ ] Update MCQ route to use EJS template
+## Implementation in progress...

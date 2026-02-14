@@ -21,7 +21,10 @@
                     <i class="fas fa-graduation-cap"></i>
                     <span>SmartEdu</span>
                 </div>
-                <div class="nav-links">
+                <button class="hamburger" id="hamburgerBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="nav-links" id="navLinks">
                     <% if (user.role === 'admin') { %>
                         <a href="/admin" class="nav-link">Dashboard</a>
                         <a href="/admin/attendance/<%= user.classLevel || 1 %>" class="nav-link">Attendance</a>
@@ -69,6 +72,20 @@
     </footer>
 
     <script src="/js/main.js"></script>
+    <script>
+        // Mobile menu hamburger toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (hamburgerBtn && navLinks) {
+                hamburgerBtn.addEventListener('click', function() {
+                    navLinks.classList.toggle('active');
+                    hamburgerBtn.classList.toggle('active');
+                });
+            }
+        });
+    </script>
     <% if (user && user.role === 'student') { %>
     <script>
         // Notification dropdown functionality

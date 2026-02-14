@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { isAuth } from "../middleware/auth.middleware.js";
 import { getLearningPath } from "../services/learningPath.service.js";
-import { uploadHomework } from "../config/upload.js";
+import { uploadHomework, uploadAvatar } from "../config/upload.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -1092,6 +1092,55 @@ router.get("/sw.js", (req, res) => {
       );
     });
   `);
+});
+
+/* =====================================================
+   STUDENT → PROFILE
+===================================================== */
+router.get("/profile", isAuth, async (req, res) => {
+  const student = await User.findById(req.session.userId).lean();
+
+  res.render("student/profile", {
+    title: "My Profile",
+    user: student
+  });
+});
+
+/* =====================================================
+   STUDENT → UPLOAD AVATAR
+===================================================== */
+router.post("/avatar", isAuth, uploadAvatar.single('avatar'), async (req, res) => {
+  try {
+    const studentId = req.session.userId;
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ success: false, error: 'No file uploaded' });
+    }
+
+    // Update user's avatar in the database
+    const avatarPath = `/images/avatars/${file.filename}`;
+    await User.findByIdAndUpdate(studentId, { avatar: avatarPath });
+
+    res.json({ success: true, avatar: avatarPath });
+  } catch (error) {
+    console.error('Error uploading avatar:', error);
+    res.status(500).json({ success: false, error: 'Failed to upload avatar' });
+  }
+});
+
+/* =====================================================
+   STUDENT → GET AVATAR
+===================================================== */
+router.get("/avatar", isAuth, async (req, res) => {
+  try {
+    const student = await User.findById(req.session.userId).lean();
+
+    res.json({ success: true, avatar: student.avatar });
+  } catch (error) {
+    console.error('Error fetching avatar:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch avatar' });
+  }
 });
 
 export default router;

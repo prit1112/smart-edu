@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +7,67 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* CSS Custom Properties - Premium Color Palette from Dashboard */
+        :root {
+            --primary: #00d4ff;
+            --primary-light: #5ce1ff;
+            --primary-dark: #00a8cc;
+            --secondary: #8a2be2;
+            --secondary-light: #a855f7;
+            --accent: #f59e0b;
+            
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            
+            --dark-bg: #05050a;
+            --dark-surface: #0a0a12;
+            --dark-card: #12121c;
+            --dark-card-hover: #1a1a28;
+            --dark-border: #2a2a3a;
+            --dark-border-light: #3a3a4a;
+            
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-bg-hover: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-hover: rgba(255, 255, 255, 0.15);
+            
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6b6b7b;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
+            --radius-full: 9999px;
+            
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            --spacing-3xl: 64px;
+            
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 40px rgba(0, 212, 255, 0.15);
+            
+            --blur-sm: blur(8px);
+            --blur-md: blur(16px);
+            --blur-lg: blur(24px);
+        }
+
         /* Reset and Base Styles */
         * {
             margin: 0;
@@ -20,112 +80,106 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #000000;
-            color: #e0e0e0;
+            font-family: var(--font-family);
+            background: var(--dark-bg);
+            color: var(--text-primary);
             overflow-x: hidden;
             min-height: 100vh;
             position: relative;
         }
 
-        /* Background Effects */
-        .background-effects {
+        /* Premium Animated Background - Matching Dashboard */
+        body::before {
+            content: '';
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 15% 15%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 85% 85%, rgba(138, 43, 226, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(245, 158, 11, 0.03) 0%, transparent 60%),
+                linear-gradient(180deg, var(--dark-bg) 0%, #080810 100%);
+        }
+
+        /* Animated Grid Pattern - Matching Dashboard */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 30s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        /* Floating Orbs - Matching Dashboard */
+        .gradient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
             z-index: -1;
             pointer-events: none;
         }
 
-        .gradient-mesh {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(0, 123, 255, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
-            animation: meshShift 20s ease-in-out infinite alternate;
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: -100px;
+            left: -50px;
+            opacity: 0.15;
+            animation: orbFloat 12s ease-in-out infinite;
         }
 
-        @keyframes meshShift {
-            0% { transform: translateX(-10px) translateY(-10px); }
-            100% { transform: translateX(10px) translateY(10px); }
+        .orb-2 {
+            width: 250px;
+            height: 250px;
+            background: var(--secondary);
+            bottom: -80px;
+            right: -50px;
+            opacity: 0.15;
+            animation: orbFloat 15s ease-in-out infinite reverse;
         }
 
-        .noise-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSBiYXNlRnJlcXVlbmN5PSIwLjkiIG51bU9jdGF2ZXM9IjQiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==');
-            opacity: 0.3;
+        .orb-3 {
+            width: 150px;
+            height: 150px;
+            background: var(--accent);
+            top: 40%;
+            left: 60%;
+            opacity: 0.1;
+            animation: pulse 6s ease-in-out infinite;
         }
 
-        .vignette {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(-30px, -20px) scale(1.02); }
         }
 
-        .floating-particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(0, 123, 255, 0.5);
-            border-radius: 50%;
-            animation: float 10s infinite linear;
-        }
-
-        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
-        .particle:nth-child(2) { left: 20%; animation-delay: 2s; }
-        .particle:nth-child(3) { left: 30%; animation-delay: 4s; }
-        .particle:nth-child(4) { left: 40%; animation-delay: 6s; }
-        .particle:nth-child(5) { left: 50%; animation-delay: 8s; }
-        .particle:nth-child(6) { left: 60%; animation-delay: 1s; }
-        .particle:nth-child(7) { left: 70%; animation-delay: 3s; }
-        .particle:nth-child(8) { left: 80%; animation-delay: 5s; }
-        .particle:nth-child(9) { left: 90%; animation-delay: 7s; }
-        .particle:nth-child(10) { left: 100%; animation-delay: 9s; }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.3); opacity: 0.15; }
         }
 
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .cursor-glow {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(0, 123, 255, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 1;
         }
 
         /* Auth Container */
@@ -135,19 +189,21 @@
             justify-content: center;
             min-height: 100vh;
             padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
 
         .auth-card {
-            background: rgba(10, 10, 10, 0.7);
-            backdrop-filter: blur(40px);
-            border: 2px solid transparent;
-            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(18, 18, 28, 0.9) 0%, rgba(10, 10, 18, 0.95) 100%);
+            backdrop-filter: var(--blur-lg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
             padding: 3rem;
             width: 100%;
             max-width: 420px;
             position: relative;
-            box-shadow: 0 0 30px rgba(0, 123, 255, 0.2), 0 0 60px rgba(138, 43, 226, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
+            box-shadow: var(--shadow-lg), var(--shadow-glow), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            transition: all var(--transition-normal);
             animation: slideIn 0.5s ease-out;
             overflow: hidden;
         }
@@ -155,16 +211,11 @@
         .auth-card::before {
             content: '';
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #007bff, #8a2be2, #00ffff, #007bff);
-            background-size: 400% 400%;
-            border-radius: 22px;
-            z-index: -1;
-            animation: gradientShift 4s ease-in-out infinite;
-            opacity: 0.8;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
         }
 
         .auth-card::after {
@@ -174,55 +225,61 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
-            border-radius: 20px;
-            opacity: 0;
-            animation: shimmer 3s ease-in-out infinite;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(138, 43, 226, 0.05) 0%, transparent 50%);
             pointer-events: none;
+            border-radius: var(--radius-2xl);
         }
 
-        .auth-card:hover::after {
-            opacity: 1;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        .auth-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: var(--shadow-lg), 0 0 60px rgba(0, 212, 255, 0.2);
         }
 
         /* Form Styles */
         .auth-header {
             text-align: center;
             margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .auth-header .logo {
             font-size: 3rem;
             margin-bottom: 1rem;
-            background: linear-gradient(45deg, #007bff, #8a2be2, #00ffff);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .auth-header .logo i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            -webkit-text-fill-color: initial;
         }
 
         .auth-header h1 {
             font-size: 2.2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            background: linear-gradient(45deg, #ffffff, #e0e0e0);
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -0.5px;
         }
 
         .auth-header p {
-            color: #b0b0b0;
+            color: var(--text-secondary);
             font-size: 1rem;
             font-weight: 400;
         }
@@ -230,13 +287,14 @@
         .form-group {
             margin-bottom: 1.8rem;
             position: relative;
+            z-index: 1;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
-            color: #ffffff;
+            color: var(--text-primary);
             font-size: 0.95rem;
         }
 
@@ -249,45 +307,46 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #888;
+            color: var(--text-muted);
             font-size: 1.1rem;
-            transition: color 0.3s ease;
+            transition: color var(--transition-normal);
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
             padding: 1rem 1rem 1rem 3rem;
-            background: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: #e0e0e0;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
             font-size: 1rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            transition: all var(--transition-normal);
+            font-family: var(--font-family);
         }
 
         .form-group input:hover,
         .form-group select:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
         }
 
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15), 0 0 20px rgba(0, 123, 255, 0.1);
-            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15), var(--shadow-glow);
+            background: var(--glass-bg-hover);
         }
 
         .form-group input:focus + i,
         .form-group select:focus + i {
-            color: #007bff;
+            color: var(--primary);
         }
 
         .form-group input::placeholder {
-            color: #999;
+            color: var(--text-muted);
         }
 
         .role-group {
@@ -305,28 +364,36 @@
         }
 
         .role-option label {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
             padding: 1rem;
-            background: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal);
             font-weight: 600;
-            backdrop-filter: blur(10px);
         }
 
         .role-option label:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+            background: var(--glass-bg-hover);
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
         }
 
         .role-option input[type="radio"]:checked + label {
-            background: linear-gradient(45deg, rgba(0, 123, 255, 0.2), rgba(138, 43, 226, 0.2));
-            border-color: #007bff;
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(138, 43, 226, 0.1));
+            border-color: var(--primary);
+            color: var(--text-primary);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .role-option input[type="radio"]:checked + label i {
+            color: var(--primary);
         }
 
         .class-level-group {
@@ -346,16 +413,17 @@
         .auth-btn {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(45deg, #007bff, #8a2be2, #00ffff);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border: none;
-            border-radius: 12px;
+            border-radius: var(--radius-full);
             color: white;
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--transition-normal);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
         }
 
         .auth-btn::before {
@@ -375,7 +443,11 @@
 
         .auth-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 123, 255, 0.4);
+            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .auth-btn:active {
+            transform: translateY(-1px);
         }
 
         .password-strength {
@@ -384,7 +456,7 @@
 
         .strength-bar {
             height: 4px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
             overflow: hidden;
             margin-bottom: 0.25rem;
@@ -398,37 +470,39 @@
 
         .strength-text {
             font-size: 0.8rem;
-            color: #b0b0b0;
+            color: var(--text-secondary);
         }
 
         .auth-links {
             text-align: center;
             margin-top: 2rem;
+            position: relative;
+            z-index: 1;
         }
 
         .auth-links a {
-            color: #007bff;
+            color: var(--primary);
             text-decoration: none;
             font-size: 1rem;
             font-weight: 500;
-            transition: color 0.3s ease;
+            transition: color var(--transition-normal);
         }
 
         .auth-links a:hover {
-            color: #00ffff;
+            color: var(--primary-light);
             text-decoration: underline;
         }
 
         .error-message {
-            background: linear-gradient(45deg, rgba(220, 53, 69, 0.2), rgba(255, 107, 107, 0.2));
-            border: 2px solid rgba(220, 53, 69, 0.4);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 53, 69, 0.1));
+            border: 1px solid rgba(239, 68, 68, 0.3);
             color: #ff6b6b;
             padding: 1rem;
-            border-radius: 12px;
+            border-radius: var(--radius-lg);
             margin-bottom: 1.8rem;
             text-align: center;
             font-weight: 500;
-            backdrop-filter: blur(10px);
+            backdrop-filter: var(--blur-sm);
         }
 
         /* Responsive Design */
@@ -468,34 +542,31 @@
             .auth-header h1 {
                 font-size: 1.5rem;
             }
+
+            .auth-header .logo {
+                font-size: 2.5rem;
+            }
+
+            .auth-header .logo i {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="background-effects">
-        <div class="gradient-mesh"></div>
-        <div class="noise-overlay"></div>
-        <div class="vignette"></div>
-        <div class="floating-particles">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-        </div>
-    </div>
-
-    <div class="cursor-glow" id="cursor-glow"></div>
+    <!-- Floating Orbs - Matching Dashboard -->
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
 
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    SmartEdu
+                </div>
                 <h1><%= title.includes('Login') ? 'Welcome Back' : 'Join SmartEdu' %></h1>
                 <p><%= title.includes('Login') ? 'Sign in to your account' : 'Create your account' %></p>
             </div>
@@ -601,18 +672,6 @@
     </div>
 
     <script>
-        // Cursor glow effect
-        document.addEventListener('mousemove', (e) => {
-            const cursorGlow = document.getElementById('cursor-glow');
-            cursorGlow.style.left = e.clientX - 75 + 'px';
-            cursorGlow.style.top = e.clientY - 75 + 'px';
-            cursorGlow.style.opacity = '1';
-        });
-        document.addEventListener('mouseleave', () => {
-            const cursorGlow = document.getElementById('cursor-glow');
-            cursorGlow.style.opacity = '0';
-        });
-
         // Show class level for student
         document.querySelectorAll('input[name="role"]').forEach(radio => {
             radio.addEventListener('change', () => {
@@ -627,37 +686,42 @@
 
         // Password strength indicator
         const passwordInput = document.getElementById('password');
-        const strengthFill = document.querySelector('.strength-fill');
-        const strengthText = document.querySelector('.strength-text');
+        if (passwordInput) {
+            const strengthFill = document.querySelector('.strength-fill');
+            const strengthText = document.querySelector('.strength-text');
 
-        passwordInput.addEventListener('input', () => {
-            const password = passwordInput.value;
-            let strength = 0;
-            let feedback = '';
+            passwordInput.addEventListener('input', () => {
+                const password = passwordInput.value;
+                let strength = 0;
+                let feedback = '';
 
-            if (password.length >= 8) strength += 1;
-            if (/[a-z]/.test(password)) strength += 1;
-            if (/[A-Z]/.test(password)) strength += 1;
-            if (/[0-9]/.test(password)) strength += 1;
-            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                if (password.length >= 8) strength += 1;
+                if (/[a-z]/.test(password)) strength += 1;
+                if (/[A-Z]/.test(password)) strength += 1;
+                if (/[0-9]/.test(password)) strength += 1;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
 
-            const percentage = (strength / 5) * 100;
-            strengthFill.style.width = percentage + '%';
+                const percentage = (strength / 5) * 100;
+                if (strengthFill) {
+                    strengthFill.style.width = percentage + '%';
+                }
 
-            if (strength < 2) {
-                strengthFill.style.background = '#dc3545';
-                feedback = 'Weak';
-            } else if (strength < 4) {
-                strengthFill.style.background = '#ffc107';
-                feedback = 'Medium';
-            } else {
-                strengthFill.style.background = '#28a745';
-                feedback = 'Strong';
-            }
+                if (strength < 2) {
+                    if (strengthFill) strengthFill.style.background = '#ef4444';
+                    feedback = 'Weak';
+                } else if (strength < 4) {
+                    if (strengthFill) strengthFill.style.background = '#f59e0b';
+                    feedback = 'Medium';
+                } else {
+                    if (strengthFill) strengthFill.style.background = '#10b981';
+                    feedback = 'Strong';
+                }
 
-            strengthText.textContent = `Password strength: ${feedback}`;
-        });
+                if (strengthText) {
+                    strengthText.textContent = `Password strength: ${feedback}`;
+                }
+            });
+        }
     </script>
 </body>
 </html>
-
