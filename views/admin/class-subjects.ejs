@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects - STD <%= classLevel %> - SmartEdu Admin</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --success-light: #34d399;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --error: #ef4444;
+            --error-light: #f87171;
+            --info: #3b82f6;
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+            --dark-3: #334155;
+            --gray: #64748b;
+            --gray-light: #94a3b8;
+            --white: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--white);
+            overflow-x: hidden;
+        }
+        .bg-effects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%); top: -150px; left: -150px; animation: pulse 8s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%); bottom: -100px; right: -100px; animation: pulse 10s ease-in-out infinite reverse; }
+        .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 12s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        .header { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; z-index: 1000; }
+        .header-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .header-brand-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .header-brand-text { font-size: 1.35rem; font-weight: 700; background: linear-gradient(135deg, #fff 0%, var(--success-light) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-nav { display: flex; align-items: center; gap: 0.5rem; }
+        .header-nav-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 10px; text-decoration: none; color: var(--gray-light); font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; position: relative; }
+        .header-nav-link:hover { color: var(--white); background: rgba(16, 185, 129, 0.1); }
+        .header-nav-link.active { color: var(--white); background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(99, 102, 241, 0.15) 100%); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .main { padding-top: 90px; padding-bottom: 3rem; min-height: 100vh; position: relative; z-index: 1; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title-section { animation: fadeInDown 0.6s ease; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .page-title-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 1rem; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4); }
+        .page-title { font-size: 2.25rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+        .page-subtitle { color: var(--gray-light); font-size: 1rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.9rem 1.75rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--success), var(--primary-dark)); color: var(--white); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5); }
+        .btn-secondary { background: rgba(148, 163, 184, 0.1); color: var(--gray-light); border: 1px solid rgba(148, 163, 184, 0.2); }
+        .btn-secondary:hover { background: rgba(148, 163, 184, 0.2); color: var(--white); }
+        .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--error-light); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.3); }
+        
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 16px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; backdrop-filter: blur(10px); }
+        .stat-icon { width: 50px; height: 50px; background: linear-gradient(135deg, var(--success), var(--primary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .stat-data h3 { font-size: 1.75rem; font-weight: 700; color: var(--white); }
+        .stat-data p { color: var(--gray-light); font-size: 0.875rem; }
+        
+        /* Subjects Grid */
+        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+        .subject-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px); transition: all 0.3s ease; animation: fadeInUp 0.6s ease backwards; }
+        .subject-card:hover { transform: translateY(-4px); border-color: var(--success); box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .subject-card-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .subject-icon { width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .subject-title { font-size: 1.25rem; font-weight: 600; color: var(--white); }
+        .subject-meta { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .subject-meta span { font-size: 0.875rem; color: var(--gray-light); display: flex; align-items: center; gap: 0.375rem; }
+        .subject-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .subject-actions .btn { flex: 1; min-width: 120px; justify-content: center; }
+        
+        /* Add Subject Card */
+        .add-subject-card { background: rgba(30, 41, 59, 0.4); border: 2px dashed rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; cursor: pointer; transition: all 0.3s ease; }
+        .add-subject-card:hover { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .add-subject-icon { width: 70px; height: 70px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: var(--success); margin-bottom: 1rem; }
+        .add-subject-card h3 { color: var(--white); font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .add-subject-card p { color: var(--gray-light); font-size: 0.875rem; }
+        
+        /* Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--dark-2); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 24px; padding: 2rem; max-width: 500px; width: 90%; animation: modalIn 0.3s ease; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-title { font-size: 1.5rem; font-weight: 600; color: var(--white); }
+        .modal-close { background: none; border: none; color: var(--gray-light); font-size: 1.25rem; cursor: pointer; padding: 0.5rem; }
+        .form-field { margin-bottom: 1rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--gray-light); font-size: 0.875rem; }
+.form-input { width: 100%; padding: 0.875rem 1rem; background: rgba(15, 23, 42, 0.7); border: 1.5px solid rgba(16, 185, 129, 0.3); border-radius: 10px; color: var(--white); font-size: 0.9rem; font-family: inherit; transition: all 0.3s ease; }
+        .form-input:focus { outline: none; border-color: var(--success); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); }
+        .form-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+        .form-actions .btn { flex: 1; }
+        
+        /* Delete Form */
+        .delete-form { display: inline; }
+        
+        @media (max-width: 768px) { 
+            .header { padding: 0 1rem; } 
+            .header-nav-link span { display: none; } 
+            .main { padding-top: 80px; } 
+            .page-title { font-size: 1.75rem; }
+            .subjects-grid { grid-template-columns: 1fr; }
+            .page-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <header class="header">
+        <a href="/admin" class="header-brand">
+            <div class="header-brand-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="header-brand-text">SmartEdu Admin</span>
+        </a>
+        <nav class="header-nav">
+            <a href="/admin" class="header-nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="/admin/homework" class="header-nav-link"><i class="fas fa-book"></i><span>Homework</span></a>
+            <a href="/admin/send-notification" class="header-nav-link"><i class="fas fa-paper-plane"></i><span>Notifications</span></a>
+            <a href="/logout" class="header-nav-link"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </nav>
+    </header>
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <div class="page-title-section">
+                    <div class="page-title-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <h1 class="page-title">STD <%= classLevel %> - Subjects</h1>
+                    <p class="page-subtitle">Manage subjects for Class <%= classLevel %></p>
+                </div>
+                <a href="/admin" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-book"></i></div>
+                    <div class="stat-data">
+                        <h3><%= subjects.length %></h3>
+                        <p>Total Subjects</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-folder"></i></div>
+                    <div class="stat-data">
+                        <h3><%= classLevel %></h3>
+                        <p>Current Class</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Subjects Grid -->
+            <div class="subjects-grid">
+                <% subjects.forEach(function(subject, index) { %>
+                <div class="subject-card" style="animation-delay: <%= index * 0.1 %>s;">
+                    <div class="subject-card-header">
+                        <div class="subject-icon"><i class="fas fa-book"></i></div>
+                        <div class="subject-title"><%= subject.name %></div>
+                    </div>
+                    <div class="subject-meta">
+                        <span><i class="fas fa-layer-group"></i> STD <%= subject.classLevel %></span>
+                    </div>
+                    <div class="subject-actions">
+                        <a href="/admin/chapters/<%= subject._id %>" class="btn btn-primary">
+                            <i class="fas fa-folder-open"></i> Chapters
+                        </a>
+                        <form method="POST" action="/admin/delete-subject/<%= subject._id %>" class="delete-form" onsubmit="return confirm('Delete this subject and all its chapters?');">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <% }); %>
+                
+                <!-- Add Subject Card -->
+                <div class="add-subject-card" onclick="openModal()">
+                    <div class="add-subject-icon"><i class="fas fa-plus"></i></div>
+                    <h3>Add New Subject</h3>
+                    <p>Create a new subject for this class</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Add Subject Modal -->
+    <div class="modal-overlay" id="addSubjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Subject</h2>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <form method="POST" action="/admin/add-subject">
+                <input type="hidden" name="classLevel" value="<%= classLevel %>">
+                <div class="form-field">
+                    <label for="name" class="form-label">Subject Name *</label>
+                    <input type="text" id="name" name="name" class="form-input" placeholder="Enter subject name" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Subject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function openModal() {
+            document.getElementById('addSubjectModal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('addSubjectModal').classList.remove('active');
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>

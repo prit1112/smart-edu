@@ -1,0 +1,24 @@
+# TODO for Vyntex Assessments Solutions Website
+
+- [x] Create vyntex folder and subfolders (includes, assets/css, assets/js)
+- [x] Create includes/header.php with Bootstrap navbar and grade dropdown
+- [ ] Create includes/footer.php
+- [ ] Create index.php (home page)
+- [ ] Create preschool1.php
+- [ ] Create preschool2.php
+- [ ] Create grade1.php
+- [ ] Create grade2.php
+- [ ] Create grade3.php
+- [ ] Create grade4.php
+- [ ] Create grade5.php
+- [ ] Create grade6.php
+- [ ] Create grade7.php
+- [ ] Create grade8.php
+- [ ] Create grade9.php
+- [ ] Create grade10.php
+- [ ] Create grade11.php
+- [ ] Create grade12.php
+- [ ] Create contact.php
+- [ ] Create about.php
+- [ ] Create assets/css/style.css
+- [ ] Create assets/js/script.js

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Notification - SmartEdu Admin</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --success-light: #34d399;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --error: #ef4444;
+            --error-light: #f87171;
+            --info: #3b82f6;
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+            --dark-3: #334155;
+            --gray: #64748b;
+            --gray-light: #94a3b8;
+            --white: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--white);
+            overflow-x: hidden;
+        }
+        .bg-effects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%); top: -150px; left: -150px; animation: pulse 8s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%); bottom: -100px; right: -100px; animation: pulse 10s ease-in-out infinite reverse; }
+        .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 12s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        .header { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(99, 102, 241, 0.2); display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; z-index: 1000; }
+        .header-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .header-brand-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); }
+        .header-brand-text { font-size: 1.35rem; font-weight: 700; background: linear-gradient(135deg, #fff 0%, var(--primary-light) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-nav { display: flex; align-items: center; gap: 0.5rem; }
+        .header-nav-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 10px; text-decoration: none; color: var(--gray-light); font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; position: relative; }
+        .header-nav-link:hover { color: var(--white); background: rgba(99, 102, 241, 0.1); }
+        .header-nav-link.active { color: var(--white); background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(236, 72, 153, 0.15) 100%); border: 1px solid rgba(99, 102, 241, 0.3); }
+        .main { padding-top: 90px; padding-bottom: 3rem; min-height: 100vh; position: relative; z-index: 1; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+        .page-title-section { text-align: center; margin-bottom: 2.5rem; animation: fadeInDown 0.6s ease; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .page-title-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 1rem; box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4); }
+        .page-title { font-size: 2.25rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+        .page-subtitle { color: var(--gray-light); font-size: 1rem; }
+        .alert { padding: 1rem 1.5rem; border-radius: 12px; display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; animation: fadeInDown 0.4s ease; border: 1px solid; }
+        .alert-success { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.4); color: var(--success-light); }
+        .alert-error { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); color: var(--error-light); }
+        .alert i { font-size: 1.25rem; }
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        @media (max-width: 1024px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) { .stats-row { grid-template-columns: 1fr; } }
+        .stat-box { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(99, 102, 241, 0.15); border-radius: 16px; padding: 1.25rem; display: flex; align-items: center; gap: 1rem; transition: all 0.3s ease; animation: fadeInUp 0.5s ease backwards; }
+        .stat-box:nth-child(1) { animation-delay: 0.1s; } .stat-box:nth-child(2) { animation-delay: 0.2s; } .stat-box:nth-child(3) { animation-delay: 0.3s; } .stat-box:nth-child(4) { animation-delay: 0.4s; }
+        .stat-box:hover { transform: translateY(-3px); border-color: rgba(99, 102, 241, 0.4); box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .stat-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; }
+        .stat-icon.primary { background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(99, 102, 241, 0.1)); color: var(--primary-light); }
+        .stat-icon.success { background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.1)); color: var(--success); }
+        .stat-icon.warning { background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.1)); color: var(--warning); }
+        .stat-icon.info { background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.1)); color: var(--info); }
+        .stat-info h3 { font-size: 1.65rem; font-weight: 700; color: var(--white); line-height: 1; margin-bottom: 0.25rem; }
+        .stat-info p { font-size: 0.8rem; color: var(--gray-light); text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-section-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(99, 102, 241, 0.15); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px); animation: fadeInUp 0.6s ease 0.2s backwards; margin-bottom: 1.5rem; }
+        .form-block { margin-bottom: 1.75rem; padding-bottom: 1.75rem; border-bottom: 1px solid rgba(99, 102, 241, 0.1); }
+        .form-block:last-of-type { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .form-block-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+        .form-block-icon { width: 42px; height: 42px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.15)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary-light); font-size: 1.1rem; }
+        .form-block-title { font-size: 1.05rem; font-weight: 600; color: var(--white); }
+        .form-block-title span { display: block; font-size: 0.8rem; color: var(--gray-light); font-weight: 400; margin-top: 0.125rem; }
+        .form-field { margin-bottom: 1rem; }
+        .form-field:last-child { margin-bottom: 0; }
+        .form-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .form-label label { font-weight: 500; color: var(--gray-light); font-size: 0.875rem; }
+        .form-input { width: 100%; padding: 0.875rem 1rem; background: rgba(15, 23, 42, 0.7); border: 1.5px solid rgba(99, 102, 241, 0.15); border-radius: 10px; color: var(--white); font-size: 0.9rem; font-family: inherit; transition: all 0.3s ease; }
+        .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); background: rgba(15, 23, 42, 0.9); }
+        .form-input::placeholder { color: var(--gray); }
+        textarea.form-input { min-height: 120px; resize: vertical; line-height: 1.6; }
+        select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.25rem; padding-right: 2.5rem; }
+        .priority-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+        @media (max-width: 640px) { .priority-options { grid-template-columns: repeat(2, 1fr); } }
+        .priority-option input { display: none; }
+        .priority-btn { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem 1rem; background: rgba(15, 23, 42, 0.6); border: 2px solid rgba(99, 102, 241, 0.1); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; }
+        .priority-btn:hover { background: rgba(15, 23, 42, 0.9); border-color: rgba(99, 102, 241, 0.3); }
+        .priority-option input:checked + .priority-btn { border-color: var(--primary); background: rgba(99, 102, 241, 0.15); }
+        .priority-icon { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.9rem; }
+        .priority-icon.info { background: rgba(59, 130, 246, 0.2); color: var(--info); }
+        .priority-icon.success { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .priority-icon.warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .priority-icon.error { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+        .priority-text { font-weight: 500; color: var(--white); font-size: 0.875rem; }
+        .target-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+        @media (max-width: 640px) { .target-options { grid-template-columns: 1fr; } }
+        .target-option { }
+        .target-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .target-btn { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 1.25rem 1rem; background: rgba(15, 23, 42, 0.6); border: 2px solid rgba(99, 102, 241, 0.1); border-radius: 14px; cursor: pointer; transition: all 0.3s ease; text-align: center; }
+        .target-btn:hover { background: rgba(15, 23, 42, 0.9); border-color: rgba(99, 102, 241, 0.3); transform: translateY(-2px); }
+        .target-option input:checked + .target-btn { border-color: var(--primary); background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.15)); }
+        .target-icon { font-size: 1.5rem; color: var(--gray-light); transition: all 0.3s ease; }
+        .target-option input:checked + .target-btn .target-icon { color: var(--primary-light); transform: scale(1.1); }
+        .target-text { font-weight: 500; color: var(--white); font-size: 0.875rem; }
+        .dynamic-field { display: none; padding: 1rem; background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(99, 102, 241, 0.1); border-radius: 12px; margin-top: 1rem; animation: slideDown 0.3s ease; }
+        .dynamic-field.active { display: block; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .channel-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+        @media (max-width: 640px) { .channel-options { grid-template-columns: 1fr; } }
+        .channel-card { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: rgba(15, 23, 42, 0.6); border: 2px solid rgba(99, 102, 241, 0.1); border-radius: 14px; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .channel-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary)); transform: scaleX(0); transition: transform 0.3s ease; }
+        .channel-card:hover { background: rgba(15, 23, 42, 0.9); border-color: rgba(99, 102, 241, 0.3); }
+        .channel-card.active { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+        .channel-card.active::before { transform: scaleX(1); }
+        .channel-icon { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; background: rgba(148, 163, 184, 0.1); border-radius: 10px; font-size: 1.1rem; color: var(--gray-light); transition: all 0.3s ease; }
+        .channel-card.active .channel-icon { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2)); color: var(--primary-light); }
+        .channel-name { font-weight: 600; color: var(--white); font-size: 0.9rem; }
+        .channel-desc { font-size: 0.75rem; color: var(--gray); margin-top: 0.125rem; }
+        .form-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(99, 102, 241, 0.1); }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.9rem 1.75rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: var(--white); box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); flex: 1; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5); }
+        .btn-secondary { background: rgba(148, 163, 184, 0.1); color: var(--gray-light); border: 1px solid rgba(148, 163, 184, 0.2); }
+        .btn-secondary:hover { background: rgba(148, 163, 184, 0.2); color: var(--white); }
+        @media (max-width: 768px) { .header { padding: 0 1rem; } .header-nav-link span { display: none; } .main { padding-top: 80px; } .page-title { font-size: 1.75rem; } .form-actions { flex-direction: column; } .btn { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="bg-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <header class="header">
+        <a href="/admin" class="header-brand">
+            <div class="header-brand-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="header-brand-text">SmartEdu Admin</span>
+        </a>
+        <nav class="header-nav">
+            <a href="/admin" class="header-nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="/admin/send-notification" class="header-nav-link active"><i class="fas fa-paper-plane"></i><span>Send Notification</span></a>
+            <a href="/admin/notifications/history" class="header-nav-link"><i class="fas fa-history"></i><span>History</span></a>
+            <a href="/admin/homework" class="header-nav-link"><i class="fas fa-book"></i><span>Homework</span></a>
+            <a href="/logout" class="header-nav-link"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </nav>
+    </header>
+    <main class="main">
+        <div class="container">
+            <% if (typeof success !== 'undefined' && success) { %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i><span>Notification sent successfully to all target students!</span></div>
+            <% } %>
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="alert alert-error"><i class="fas fa-exclamation-triangle"></i><span><%= error %></span></div>
+            <% } %>
+            <div class="page-title-section">
+                <div class="page-title-icon"><i class="fas fa-paper-plane"></i></div>
+                <h1 class="page-title">Send Notification</h1>
+                <p class="page-subtitle">Create and send notifications to your students</p>
+            </div>
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-icon primary"><i class="fas fa-bell"></i></div>
+                    <div class="stat-info"><h3><%= typeof totalNotifications !== 'undefined' ? totalNotifications : '0' %></h3><p>Total Sent</p></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon success"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info"><h3><%= typeof todayNotifications !== 'undefined' ? todayNotifications : '0' %></h3><p>Today</p></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon warning"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info"><h3><%= typeof scheduledNotifications !== 'undefined' ? scheduledNotifications : '0' %></h3><p>Scheduled</p></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon info"><i class="fas fa-users"></i></div>
+                    <div class="stat-info"><h3><%= typeof totalStudents !== 'undefined' ? totalStudents : '0' %></h3><p>Total Students</p></div>
+                </div>
+            </div>
+            <form method="POST" action="/admin/send-notification">
+                <div class="form-section-card">
+                    <div class="form-block">
+                        <div class="form-block-header">
+                            <div class="form-block-icon"><i class="fas fa-info-circle"></i></div>
+                            <div class="form-block-title">Basic Information<span>Enter the notification details</span></div>
+                        </div>
+                        <div class="form-field">
+                            <label for="title" class="form-label">Title *</label>
+                            <input type="text" id="title" name="title" class="form-input" placeholder="Enter notification title" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="message" class="form-label">Message *</label>
+                            <textarea id="message" name="message" class="form-input" placeholder="Enter your notification message" required></textarea>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Priority</label>
+                            <div class="priority-options">
+                                <label class="priority-option"><input type="radio" name="type" value="info" checked><div class="priority-btn"><div class="priority-icon info"><i class="fas fa-info"></i></div><span class="priority-text">Info</span></div></label>
+                                <label class="priority-option"><input type="radio" name="type" value="success"><div class="priority-btn"><div class="priority-icon success"><i class="fas fa-check"></i></div><span class="priority-text">Success</span></div></label>
+                                <label class="priority-option"><input type="radio" name="type" value="warning"><div class="priority-btn"><div class="priority-icon warning"><i class="fas fa-exclamation"></i></div><span class="priority-text">Warning</span></div></label>
+                                <label class="priority-option"><input type="radio" name="type" value="error"><div class="priority-btn"><div class="priority-icon error"><i class="fas fa-times"></i></div><span class="priority-text">Urgent</span></div></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section-card">
+                    <div class="form-block">
+                        <div class="form-block-header">
+                            <div class="form-block-icon"><i class="fas fa-users"></i></div>
+                            <div class="form-block-title">Target Audience<span>Select who should receive this notification</span></div>
+                        </div>
+                        <div class="target-options">
+                            <label class="target-option"><input type="radio" name="target" value="all" checked><div class="target-btn"><i class="fas fa-users target-icon"></i><span class="target-text">All Students</span></div></label>
+                            <label class="target-option"><input type="radio" name="target" value="class"><div class="target-btn"><i class="fas fa-school target-icon"></i><span class="target-text">Specific Class</span></div></label>
+                            <label class="target-option"><input type="radio" name="target" value="student"><div class="target-btn"><i class="fas fa-user target-icon"></i><span class="target-text">Specific Student</span></div></label>
+                        </div>
+                        <div id="classFields" class="dynamic-field">
+                            <div class="form-field">
+                                <label for="classLevel" class="form-label">Select Class Level</label>
+                                <select id="classLevel" name="classLevel" class="form-input">
+                                    <option value="">Choose a class...</option>
+                                    <option value="1">STD 1</option><option value="2">STD 2</option><option value="3">STD 3</option><option value="4">STD 4</option><option value="5">STD 5</option>
+                                    <option value="6">STD 6</option><option value="7">STD 7</option><option value="8">STD 8</option><option value="9">STD 9</option><option value="10">STD 10</option>
+                                    <option value="11">STD 11</option><option value="12">STD 12</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="studentFields" class="dynamic-field">
+                            <div class="form-field">
+                                <label for="student" class="form-label">Select Student</label>
+                                <select id="student" name="student" class="form-input"><option value="">Choose a student...</option></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section-card">
+                    <div class="form-block">
+                        <div class="form-block-header">
+                            <div class="form-block-icon"><i class="fas fa-broadcast-tower"></i></div>
+                            <div class="form-block-title">Notification Channels<span>Choose how to send the notification</span></div>
+                        </div>
+                        <div class="channel-options">
+                            <div class="channel-card active"><input type="checkbox" name="channels[inApp]" value="true" checked style="display:none"><div class="channel-icon"><i class="fas fa-bell"></i></div><div><div class="channel-name">In-App</div><div class="channel-desc">Send within the app</div></div></div>
+                            <div class="channel-card"><input type="checkbox" name="channels[push]" value="true" style="display:none"><div class="channel-icon"><i class="fas fa-mobile-alt"></i></div><div><div class="channel-name">Push</div><div class="channel-desc">Browser push</div></div></div>
+                            <div class="channel-card"><input type="checkbox" name="channels[whatsapp]" value="true" style="display:none"><div class="channel-icon"><i class="fab fa-whatsapp"></i></div><div><div class="channel-name">WhatsApp</div><div class="channel-desc">Via WhatsApp</div></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Notification</button>
+                    <a href="/admin" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const targetOptions = document.querySelectorAll('.target-option input');
+            const classFields = document.getElementById('classFields');
+            const studentFields = document.getElementById('studentFields');
+            const studentSelect = document.getElementById('student');
+            
+            // Function to update field visibility based on selected target
+            function updateTargetFields() {
+                const selectedRadio = document.querySelector('.target-option input:checked');
+                if (selectedRadio) {
+                    classFields.style.display = selectedRadio.value === 'class' ? 'block' : 'none';
+                    studentFields.style.display = selectedRadio.value === 'student' ? 'block' : 'none';
+                    
+                    // If student is selected, load students list
+                    if (selectedRadio.value === 'student' && studentSelect.options.length <= 1) {
+                        loadStudents();
+                    }
+                }
+            }
+            
+            // Initialize field visibility on page load (handles form re-render after errors)
+            updateTargetFields();
+            
+            // Add change event listeners to radio buttons
+            targetOptions.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    updateTargetFields();
+                });
+            });
+            
+            // Channel card click handlers
+            document.querySelectorAll('.channel-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    this.classList.toggle('active');
+                    checkbox.checked = this.classList.contains('active');
+                });
+            });
+            
+            // Function to load students list
+            function loadStudents() {
+                fetch('/admin/api/students')
+                    .then(res => res.json())
+                    .then(students => {
+                        studentSelect.innerHTML = '<option value="">Choose a student...</option>';
+                        students.forEach(student => {
+                            const option = document.createElement('option');
+                            option.value = student._id;
+                            option.textContent = student.name + ' (STD ' + student.classLevel + ')';
+                            studentSelect.appendChild(option);
+                        });
+                    })
+                    .catch(err => console.error('Error loading students:', err));
+            }
+        });
+    </script>
+</body>
+</html>

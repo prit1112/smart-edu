@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz History - SmartEdu</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .history-page-container {
+            min-height: 100vh;
+            padding: var(--spacing-8);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(138, 43, 226, 0.1));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-8);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .page-header h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .page-header p {
+            color: var(--gray-400);
+            font-size: var(--font-size-lg);
+            margin: 0;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .history-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            transition: all var(--transition-normal);
+        }
+
+        .history-item:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            transform: translateX(4px);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-4);
+        }
+
+        .history-item h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .history-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .history-stat {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .history-stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-500);
+        }
+
+        .history-stat-value {
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .history-stat-value.score {
+            color: var(--primary);
+        }
+
+        .history-stat-value.correct {
+            color: var(--success);
+        }
+
+        .history-stat-value.wrong {
+            color: var(--error);
+        }
+
+        @media (max-width: 768px) {
+            .history-page-container {
+                padding: var(--spacing-4);
+            }
+
+            .page-header {
+                padding: var(--spacing-6);
+            }
+
+            .page-header h1 {
+                font-size: var(--font-size-2xl);
+            }
+
+            .history-stats {
+                flex-direction: column;
+                gap: var(--spacing-2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bubble Effects -->
+    <div class="bubbles">
+        <div class="bubble bubble-1"></div>
+        <div class="bubble bubble-2"></div>
+        <div class="bubble bubble-3"></div>
+        <div class="bubble bubble-4"></div>
+        <div class="bubble bubble-5"></div>
+        <div class="bubble bubble-6"></div>
+        <div class="bubble bubble-7"></div>
+        <div class="bubble bubble-8"></div>
+        <div class="bubble bubble-9"></div>
+        <div class="bubble bubble-10"></div>
+    </div>
+
+    <div class="history-page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-history"></i> Quiz History</h1>
+            <p>Review your past quiz attempts and track your progress over time</p>
+        </div>
+
+        <!-- History List -->
+        <section class="section">
+            <h2 class="section-title">Your Quiz Attempts</h2>
+            <div class="history-list">
+                <% if (results && results.length > 0) { %>
+                    <% results.forEach(result => { %>
+                    <div class="history-item">
+                        <div class="history-item-header">
+                            <h3><%= result.chapter.title %></h3>
+                            <span class="status-badge completed">Completed</span>
+                        </div>
+                        <div class="history-stats">
+                            <div class="history-stat">
+                                <span class="history-stat-label">Score:</span>
+                                <span class="history-stat-value score"><%= result.score %>/<%= result.totalMarks %> (<%= Math.round((result.score / result.totalMarks) * 100) %>%)</span>
+                            </div>
+                            <div class="history-stat">
+                                <span class="history-stat-label">Correct:</span>
+                                <span class="history-stat-value correct"><%= result.correct %></span>
+                            </div>
+                            <div class="history-stat">
+                                <span class="history-stat-label">Wrong:</span>
+                                <span class="history-stat-value wrong"><%= result.wrong %></span>
+                            </div>
+                            <div class="history-stat">
+                                <span class="history-stat-label">Date:</span>
+                                <span class="history-stat-value"><%= new Date(result.createdAt).toLocaleDateString() %></span>
+                            </div>
+                        </div>
+                        <div class="note-actions">
+                            <a href="/student/result/<%= result._id %>" class="btn btn-primary">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                    <% }); %>
+                <% } else { %>
+                <div class="empty-state">
+                    <i class="fas fa-history"></i>
+                    <h3>No Quiz History</h3>
+                    <p>You haven't taken any quizzes yet. Start taking quizzes to see your history here!</p>
+                    <a href="/student/subjects" class="btn btn-primary mt-4">
+                        <i class="fas fa-book"></i> Browse Subjects
+                    </a>
+                </div>
+                <% } %>
+            </div>
+        </section>
+
+        <!-- Quick Access -->
+        <section class="section">
+            <h2 class="section-title">Quick Access</h2>
+            <div class="quick-access-grid">
+                <a href="/student" class="quick-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/student/performance" class="quick-btn">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Performance</span>
+                </a>
+                <a href="/student/subject" class="quick-btn">
+                    <i class="fas fa-book"></i>
+                    <span>Take Quiz</span>
+                </a>
+                <a href="/student/notifications" class="quick-btn">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

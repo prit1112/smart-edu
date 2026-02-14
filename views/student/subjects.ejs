@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Subjects - SmartEdu</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="subjects-page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-book"></i> My Subjects</h1>
+            <p>Explore your enrolled subjects and access study materials</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-book"></i></div>
+                <div class="stat-data">
+                    <h3><%= subjects.length %></h3>
+                    <p>Total Subjects</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="stat-data">
+                    <h3><%= user.classLevel %></h3>
+                    <p>Class Level</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-play-circle"></i></div>
+                <div class="stat-data">
+                    <h3><%= subjects.length %></h3>
+                    <p>Available</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subjects Grid -->
+        <section class="section">
+            <h2 class="section-title">My Subjects</h2>
+            <div class="subjects-grid">
+                <% if (subjects && subjects.length > 0) { %>
+                    <% subjects.forEach(function(subject) { %>
+                    <div class="subject-card">
+                        <div class="subject-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="subject-info">
+                            <h3><%= subject.name %></h3>
+                            <p>Class <%= subject.classLevel %></p>
+                        </div>
+                        <div class="subject-actions">
+                            <a href="/student/subject/<%= subject._id %>" class="btn btn-primary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </div>
+                    </div>
+                    <% }); %>
+                <% } else { %>
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                    <i class="fas fa-book"></i>
+                    <h3>No Subjects Available</h3>
+                    <p>Subjects will be added soon.</p>
+                </div>
+                <% } %>
+            </div>
+        </section>
+
+        <!-- Quick Access -->
+        <section class="section">
+            <h2 class="section-title">Quick access</h2>
+            <div class="quick-access-grid">
+                <a href="/student/homework" class="quick-btn">
+                    <i class="fas fa-tasks"></i>
+                    <span>Homework</span>
+                </a>
+                <a href="/student/performance" class="quick-btn">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Performance</span>
+                </a>
+                <a href="/student/notifications" class="quick-btn">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+                <a href="/student" class="quick-btn">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <style>
+        .subjects-page-container {
+            min-height: 100vh;
+            padding: var(--spacing-8);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-6);
+        }
+
+        .subject-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+
+        .subject-card:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-3px);
+        }
+
+        .subject-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .subject-info h3 {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .subject-info p {
+            font-size: var(--font-size-sm);
+            color: var(--gray-400);
+            margin-bottom: var(--spacing-4);
+        }
+
+        @media (max-width: 768px) {
+            .subjects-page-container {
+                padding: var(--spacing-4);
+            }
+
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

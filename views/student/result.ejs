@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Result - SmartEdu</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .result-page-container {
+            min-height: 100vh;
+            padding: var(--spacing-8);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .result-hero {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(138, 43, 226, 0.1));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-10);
+            text-align: center;
+            margin-bottom: var(--spacing-8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .result-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: var(--spacing-4);
+        }
+
+        .result-icon.excellent {
+            color: var(--success);
+        }
+
+        .result-icon.good {
+            color: var(--warning);
+        }
+
+        .result-icon.needs-work {
+            color: var(--error);
+        }
+
+        .result-score {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: var(--spacing-2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-score.excellent {
+            color: var(--success);
+        }
+
+        .result-score.good {
+            color: var(--warning);
+        }
+
+        .result-score.needs-work {
+            color: var(--error);
+        }
+
+        .result-label {
+            font-size: var(--font-size-xl);
+            color: var(--gray-400);
+            margin-bottom: var(--spacing-2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-chapter {
+            font-size: var(--font-size-lg);
+            color: var(--gray-300);
+            margin-bottom: var(--spacing-6);
+            position: relative;
+            z-index: 1;
+        }
+
+        .result-message {
+            font-size: var(--font-size-base);
+            color: var(--gray-400);
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .result-stat {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+
+        .result-stat:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .result-stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        .result-stat-value.correct {
+            color: var(--success);
+        }
+
+        .result-stat-value.wrong {
+            color: var(--error);
+        }
+
+        .result-stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-400);
+            margin-top: var(--spacing-2);
+        }
+
+        .result-feedback {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-8);
+            text-align: center;
+            margin-bottom: var(--spacing-8);
+        }
+
+        .result-feedback h3 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .result-feedback.excellent h3 {
+            color: var(--success);
+        }
+
+        .result-feedback.good h3 {
+            color: var(--warning);
+        }
+
+        .result-feedback.needs-work h3 {
+            color: var(--error);
+        }
+
+        .result-feedback p {
+            color: var(--gray-400);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .quick-access-section h2 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-4);
+            color: var(--white);
+        }
+
+        @media (max-width: 768px) {
+            .result-page-container {
+                padding: var(--spacing-4);
+            }
+
+            .result-hero {
+                padding: var(--spacing-6);
+            }
+
+            .result-score {
+                font-size: 3rem;
+            }
+
+            .result-icon {
+                font-size: 3.5rem;
+            }
+
+            .result-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bubble Effects -->
+    <div class="bubbles">
+        <div class="bubble bubble-1"></div>
+        <div class="bubble bubble-2"></div>
+        <div class="bubble bubble-3"></div>
+        <div class="bubble bubble-4"></div>
+        <div class="bubble bubble-5"></div>
+        <div class="bubble bubble-6"></div>
+        <div class="bubble bubble-7"></div>
+        <div class="bubble bubble-8"></div>
+        <div class="bubble bubble-9"></div>
+        <div class="bubble bubble-10"></div>
+    </div>
+
+    <div class="result-page-container">
+        <!-- Result Hero -->
+        <div class="result-hero">
+            <% if (result.score >= result.totalMarks * 0.8) { %>
+                <div class="result-icon excellent">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="result-score excellent"><%= Math.round((result.score / result.totalMarks) * 100) %>%</div>
+                <div class="result-label">Excellent Work!</div>
+            <% } else if (result.score >= result.totalMarks * 0.6) { %>
+                <div class="result-icon good">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="result-score good"><%= Math.round((result.score / result.totalMarks) * 100) %>%</div>
+                <div class="result-label">Good Job!</div>
+            <% } else { %>
+                <div class="result-icon needs-work">
+                    <i class="fas fa-book-reader"></i>
+                </div>
+                <div class="result-score needs-work"><%= Math.round((result.score / result.totalMarks) * 100) %>%</div>
+                <div class="result-label">Keep Learning!</div>
+            <% } %>
+            
+            <div class="result-chapter"><%= result.chapter.title %></div>
+            
+            <% if (result.score >= result.totalMarks * 0.8) { %>
+                <p class="result-message">You've mastered this chapter! Keep up the excellent performance across all your subjects.</p>
+            <% } else if (result.score >= result.totalMarks * 0.6) { %>
+                <p class="result-message">You've done well! Review the areas you missed to improve even further.</p>
+            <% } else { %>
+                <p class="result-message">Don't worry! Review the chapter materials and try the quiz again. You've got this!</p>
+            <% } %>
+        </div>
+
+        <!-- Result Stats -->
+        <div class="result-stats">
+            <div class="result-stat">
+                <div class="result-stat-value"><%= result.score %>/<%= result.totalMarks %></div>
+                <div class="result-stat-label">Marks Obtained</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-stat-value correct"><%= result.correct %></div>
+                <div class="result-stat-label">Correct Answers</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-stat-value wrong"><%= result.wrong %></div>
+                <div class="result-stat-label">Wrong Answers</div>
+            </div>
+            <div class="result-stat">
+                <div class="result-stat-value"><%= result.attempted %></div>
+                <div class="result-stat-label">Questions Attempted</div>
+            </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div class="result-feedback <% if (result.score >= result.totalMarks * 0.8) { %>excellent<% } else if (result.score >= result.totalMarks * 0.6) { %>good<% } else { %>needs-work<% } %>">
+            <% if (result.score >= result.totalMarks * 0.8) { %>
+                <h3><i class="fas fa-star"></i> Outstanding Performance!</h3>
+                <p>You've demonstrated a strong understanding of this chapter. Your hard work is paying off! Keep challenging yourself with more advanced topics.</p>
+            <% } else if (result.score >= result.totalMarks * 0.6) { %>
+                <h3><i class="fas fa-thumbs-up"></i> Good Progress!</h3>
+                <p>You have a solid foundation, but there's room for improvement. Focus on the topics you missed and try reviewing the chapter again.</p>
+            <% } else { %>
+                <h3><i class="fas fa-book-open"></i> Time to Review!</h3>
+                <p>Don't be discouraged! This is a great opportunity to learn. Go through the chapter materials carefully and attempt the quiz again.</p>
+            <% } %>
+        </div>
+
+        <!-- Quick Access -->
+        <section class="quick-access-section">
+            <h2>What's Next?</h2>
+            <div class="quick-access-grid">
+                <a href="/student/subject/<%= result.chapter.subject %>" class="quick-btn">
+                    <i class="fas fa-book"></i>
+                    <span>Back to Subject</span>
+                </a>
+                <a href="/student/performance" class="quick-btn">
+                    <i class="fas fa-chart-line"></i>
+                    <span>View Performance</span>
+                </a>
+                <% if (result.score < result.totalMarks * 0.8) { %>
+                <a href="/student/quiz/<%= result.chapter._id %>" class="quick-btn">
+                    <i class="fas fa-redo"></i>
+                    <span>Retake Quiz</span>
+                </a>
+                <% } %>
+                <a href="/student/subjects" class="quick-btn">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Explore Subjects</span>
+                </a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

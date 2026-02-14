@@ -1,0 +1,542 @@
+{
+  "targets": [
+    {
+      "isStage": true,
+      "name": "Stage",
+      "variables": {
+        "window_open": [
+          "window_open",
+          false
+        ]
+      },
+      "lists": {},
+      "broadcasts": {},
+      "blocks": {},
+      "comments": {},
+      "currentCostume": 0,
+      "costumes": [
+        {
+          "name": "desktop",
+          "dataFormat": "svg",
+          "assetId": "desktop_bg",
+          "md5ext": "desktop_bg.svg",
+          "rotationCenterX": 240,
+          "rotationCenterY": 180
+        }
+      ],
+      "sounds": [],
+      "volume": 100,
+      "layerOrder": 0,
+      "tempo": 60,
+      "videoTransparency": 50,
+      "videoState": "on",
+      "textToSpeechLanguage": null
+    },
+    {
+      "isStage": false,
+      "name": "MyComputer",
+      "variables": {},
+      "lists": {},
+      "broadcasts": {},
+      "blocks": {
+        "init": {
+          "opcode": "event_whenflagclicked",
+          "next": "show",
+          "parent": null,
+          "inputs": {},
+          "fields": {},
+          "shadow": false,
+          "topLevel": true,
+          "x": 10,
+          "y": 10
+        },
+        "show": {
+          "opcode": "looks_show",
+          "next": "goto",
+          "parent": "init",
+          "inputs": {},
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "goto": {
+          "opcode": "motion_gotoxy",
+          "next": "click_check",
+          "parent": "show",
+          "inputs": {
+            "X": [
+              1,
+              [
+                4,
+                "-200"
+              ]
+            ],
+            "Y": [
+              1,
+              [
+                4,
+                "-100"
+              ]
+            ]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "click_check": {
+          "opcode": "control_if",
+          "next": null,
+          "parent": "goto",
+          "inputs": {
+            "CONDITION": [
+              2,
+              "sensing_mousedown",
+              {}
+            ],
+            "SUBSTACK": [
+              2,
+              "broadcast_open_window",
+              {}
+            ]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "broadcast_open_window": {
+          "opcode": "event_broadcast",
+          "next": null,
+          "parent": "click_check",
+          "inputs": {
+            "BROADCAST_INPUT": [
+              1,
+              [
+                11,
+                "open_window",
+                "open_window"
+              ]
+            ]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        }
+      },
+      "comments": {},
+      "currentCostume": 0,
+      "costumes": [
+        {
+          "name": "mycomputer",
+          "bitmapResolution": 1,
+          "dataFormat": "svg",
+          "assetId": "mycomputer_icon",
+          "md5ext": "mycomputer_icon.svg",
+          "rotationCenterX": 32,
+          "rotationCenterY": 32
+        }
+      ],
+      "sounds": [],
+      "volume": 100,
+      "layerOrder": 1,
+      "visible": true,
+      "x": -200,
+      "y": -100,
+      "size": 50,
+      "direction": 90,
+      "draggable": false,
+      "rotationStyle": "don't rotate"
+    },
+    {
+      "isStage": false,
+      "name": "RecycleBin",
+      "variables": {},
+      "lists": {},
+      "broadcasts": {},
+      "blocks": {
+        "init": {
+          "opcode": "event_whenflagclicked",
+          "next": "show",
+          "parent": null,
+          "inputs": {},
+          "fields": {},
+          "shadow": false,
+          "topLevel": true,
+          "x": 10,
+          "y": 60
+        },
+        "show": {
+          "opcode": "looks_show",
+          "next": "goto",
+          "parent": "init",
+          "inputs": {},
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "goto": {
+          "opcode": "motion_gotoxy",
+          "next": null,
+          "parent": "show",
+          "inputs": {
+            "X": [
+              1,
+              [
+                4,
+                "-150"
+              ]
+            ],
+            "Y": [
+              1,
+              [
+                4,
+                "-100"
+              ]
+            ]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        }
+      },
+      "comments": {},
+      "currentCostume": 0,
+      "costumes": [
+        {
+          "name": "recyclebin",
+          "bitmapResolution": 1,
+          "dataFormat": "svg",
+          "assetId": "recyclebin_icon",
+          "md5ext": "recyclebin_icon.svg",
+          "rotationCenterX": 32,
+          "rotationCenterY": 32
+        }
+      ],
+      "sounds": [],
+      "volume": 100,
+      "layerOrder": 2,
+      "visible": true,
+      "x": -150,
+      "y": -100,
+      "size": 50,
+      "direction": 90,
+      "draggable": false,
+      "rotationStyle": "don't rotate"
+    },
+    {
+      "isStage": false,
+      "name": "Window",
+      "variables": {
+        "dragging": [
+          "dragging",
+          false
+        ],
+        "offset_x": [
+          "offset_x",
+          0
+        ],
+        "offset_y": [
+          "offset_y",
+          0
+        ]
+      },
+      "lists": {},
+      "broadcasts": {},
+      "blocks": {
+        "hide_init": {
+          "opcode": "event_whenflagclicked",
+          "next": "hide",
+          "parent": null,
+          "inputs": {},
+          "fields": {},
+          "shadow": false,
+          "topLevel": true,
+          "x": 10,
+          "y": 110
+        },
+        "hide": {
+          "opcode": "looks_hide",
+          "next": null,
+          "parent": "hide_init",
+          "inputs": {},
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "open_window": {
+          "opcode": "event_whenbroadcastreceived",
+          "next": "show_window",
+          "parent": null,
+          "inputs": {
+            "BROADCAST_OPTION": [
+              1,
+              [
+                11,
+                "open_window",
+                "open_window"
+              ]
+            ]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": true,
+          "x": 10,
+          "y": 160
+        },
+        "show_window": {
+          "opcode": "looks_show",
+          "next": "goto_center",
+          "parent": "open_window",
+          "inputs": {},
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "goto_center": {
+          "opcode": "motion_gotoxy",
+          "next": "forever_drag",
+          "parent": "show_window",
+          "inputs": {
+            "X": [
+              1,
+              [
+                4,
+                "0"
+              ]
+            ],
+            "Y": [
+              1,
+              [
+                4,
+                "0"
+              ]
+            ]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "forever_drag": {
+          "opcode": "control_forever",
+          "next": null,
+          "parent": "goto_center",
+          "inputs": {
+            "SUBSTACK": [
+              2,
+              "drag_logic",
+              {}
+            ]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "drag_logic": {
+          "opcode": "control_if",
+          "next": "else_not_dragging",
+          "parent": "forever_drag",
+          "inputs": {
+            "CONDITION": [
+              2,
+              "operator_and",
+              {
+                "OPERAND1": [
+                  2,
+                  "sensing_mousedown",
+                  {}
+                ],
+                "OPERAND2": [
+                  2,
+                  "sensing_touchingobject",
+                  {
+                    "TOUCHINGOBJECTMENU": [
+                      1,
+                      [
+                        12,
+                        "mouse-pointer",
+                        "_mouse_"
+                      ]
+                    ]
+                  }
+                ]
+              }
+            ],
+            "SUBSTACK": [
+              2,
+              "start_drag",
+              {}
+            ]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "start_drag": {
+          "opcode": "data_setvariableto",
+          "next": "set_offset_x",
+          "parent": "drag_logic",
+          "inputs": {
+            "VALUE": [
+              1,
+              [
+                2,
+                "True"
+              ]
+            ]
+          },
+          "fields": {
+            "VARIABLE": [
+              "dragging",
+              "dragging"
+            ]
+          },
+          "shadow": false,
+          "topLevel": false
+        },
+        "set_offset_x": {
+          "opcode": "data_setvariableto",
+          "next": "set_offset_y",
+          "parent": "start_drag",
+          "inputs": {
+            "VALUE": [
+              3,
+              "sensing_mousex",
+              {},
+              "motion_xposition",
+              {}
+            ]
+          },
+          "fields": {
+            "VARIABLE": [
+              "offset_x",
+              "offset_x"
+            ]
+          },
+          "shadow": false,
+          "topLevel": false
+        },
+        "set_offset_y": {
+          "opcode": "data_setvariableto",
+          "next": "move_to_mouse",
+          "parent": "set_offset_x",
+          "inputs": {
+            "VALUE": [
+              3,
+              "sensing_mousey",
+              {},
+              "motion_yposition",
+              {}
+            ]
+          },
+          "fields": {
+            "VARIABLE": [
+              "offset_y",
+              "offset_y"
+            ]
+          },
+          "shadow": false,
+          "topLevel": false
+        },
+        "move_to_mouse": {
+          "opcode": "motion_gotoxy",
+          "next": null,
+          "parent": "set_offset_y",
+          "inputs": {
+            "X": [
+              3,
+              "sensing_mousex",
+              {}
+            ],
+            "Y": [
+              3,
+              "sensing_mousey",
+              {}
+            ]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "else_not_dragging": {
+          "opcode": "control_if",
+          "next": null,
+          "parent": "drag_logic",
+          "inputs": {
+            "CONDITION": [
+              1,
+              [
+                2,
+                "data_variable",
+                {
+                  "VARIABLE": [
+                    "dragging",
+                    "dragging"
+                  ]
+                }
+              ]
+            ],
+            "SUBSTACK": [
+              2,
+              "stop_drag",
+              {}
+            ]
+          },
+          "fields": {},
+          "shadow": false,
+          "topLevel": false
+        },
+        "stop_drag": {
+          "opcode": "data_setvariableto",
+          "next": null,
+          "parent": "else_not_dragging",
+          "inputs": {
+            "VALUE": [
+              1,
+              [
+                2,
+                "False"
+              ]
+            ]
+          },
+          "fields": {
+            "VARIABLE": [
+              "dragging",
+              "dragging"
+            ]
+          },
+          "shadow": false,
+          "topLevel": false
+        }
+      },
+      "comments": {},
+      "currentCostume": 0,
+      "costumes": [
+        {
+          "name": "window",
+          "bitmapResolution": 1,
+          "dataFormat": "svg",
+          "assetId": "window_sprite",
+          "md5ext": "window_sprite.svg",
+          "rotationCenterX": 100,
+          "rotationCenterY": 75
+        }
+      ],
+      "sounds": [],
+      "volume": 100,
+      "layerOrder": 3,
+      "visible": false,
+      "x": 0,
+      "y": 0,
+      "size": 100,
+      "direction": 90,
+      "draggable": false,
+      "rotationStyle": "don't rotate"
+    }
+  ],
+  "monitors": [],
+  "extensions": [],
+  "meta": {
+    "semver": "3.0.0",
+    "vm": "0.2.0",
+    "agent": "Python SB3 Generator - Windows Theme"
+  }
+}

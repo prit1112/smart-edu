@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - SmartEdu</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <% if ((title && (title.toLowerCase().includes('performance') || title.toLowerCase().includes('result'))) || (user && user.role === 'student')) { %>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/unified.css">
+    <% } %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <% if (user) { %>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>SmartEdu</span>
+                </div>
+                <div class="nav-links">
+                    <% if (user.role === 'admin') { %>
+                        <a href="/admin" class="nav-link">Dashboard</a>
+                        <a href="/admin/attendance/<%= user.classLevel || 1 %>" class="nav-link">Attendance</a>
+                        <a href="/admin/analytics/class/<%= user.classLevel || 1 %>" class="nav-link">Analytics</a>
+                    <% } else { %>
+                        <a href="/student" class="nav-link">Dashboard</a>
+                        <a href="/student/performance" class="nav-link">Performance</a>
+                        <a href="/student/history" class="nav-link">History</a>
+                        <!-- Notification Bell -->
+                        <div class="notification-dropdown" id="notificationMenu">
+                            <button class="notification-btn" id="notificationBtn">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-count" id="notificationCount" style="display: none;"></span>
+                            </button>
+                            <div class="notification-menu">
+                                <div class="notification-header">
+                                    <h4>Notifications</h4>
+                                    <a href="/student/notifications" class="view-all">View All</a>
+                                </div>
+                                <div class="notification-list" id="notificationList">
+                                    <div class="no-notifications">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>No recent notifications</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                    <a href="/logout" class="nav-link logout">Logout</a>
+                </div>
+            </div>
+        </nav>
+    <% } %>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <%- body %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 SmartEdu. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/js/main.js"></script>
+    <% if (user && user.role === 'student') { %>
+    <script>
+        // Notification dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationBtn = document.getElementById('notificationBtn');
+            const notificationMenu = document.getElementById('notificationMenu');
+            const notificationList = document.getElementById('notificationList');
+            const notificationCount = document.getElementById('notificationCount');
+
+            // Toggle dropdown
+            notificationBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notificationMenu.classList.toggle('show');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!notificationMenu.contains(e.target)) {
+                    notificationMenu.classList.remove('show');
+                }
+            });
+
+            // Load notifications
+            async function loadNotifications() {
+                try {
+                    const response = await fetch('/student/notifications/data');
+                    const data = await response.json();
+
+                    if (data.notifications && data.notifications.length > 0) {
+                        const unreadCount = data.notifications.filter(n => !n.isSeen).length;
+                        if (unreadCount > 0) {
+                            notificationCount.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                            notificationCount.style.display = 'block';
+                        }
+
+                        const notificationHtml = data.notifications.slice(0, 5).map(notification => {
+                            const typeColors = {
+                                info: '#3b82f6',
+                                warning: '#f59e0b',
+                                urgent: '#ef4444'
+                            };
+                            const typeIcons = {
+                                info: 'fas fa-info-circle',
+                                warning: 'fas fa-exclamation-triangle',
+                                urgent: 'fas fa-exclamation-circle'
+                            };
+
+                            return `
+                                <div class="notification-item ${notification.isSeen ? 'seen' : 'unseen'}" onclick="markAsSeen('${notification._id}')">
+                                    <div class="notification-icon">
+                                        <i class="${typeIcons[notification.type]}" style="color: ${typeColors[notification.type]}"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <div class="notification-title">${notification.title}</div>
+                                        <div class="notification-time">${new Date(notification.createdAt).toLocaleDateString()}</div>
+                                    </div>
+                                    ${!notification.isSeen ? '<div class="unread-dot"></div>' : ''}
+                                </div>
+                            `;
+                        }).join('');
+
+                        notificationList.innerHTML = notificationHtml;
+                    }
+                } catch (error) {
+                    console.error('Error loading notifications:', error);
+                }
+            }
+
+            // Mark notification as seen
+            window.markAsSeen = async function(notificationId) {
+                try {
+                    const response = await fetch('/student/notifications/mark-seen', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ notificationId })
+                    });
+
+                    if (response.ok) {
+                        // Reload notifications
+                        loadNotifications();
+                        // Close dropdown
+                        notificationMenu.classList.remove('show');
+                    }
+                } catch (error) {
+                    console.error('Error marking notification as seen:', error);
+                }
+            };
+
+            // Load notifications on page load
+            loadNotifications();
+
+            // Refresh notifications every 30 seconds
+            setInterval(loadNotifications, 30000);
+        });
+    </script>
+    <% } %>
+</body>
+</html>

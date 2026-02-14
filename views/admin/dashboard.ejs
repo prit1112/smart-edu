@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SmartEdu</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .admin-container {
+            min-height: 100vh;
+            padding: var(--spacing-8);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--spacing-8);
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-2);
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: var(--gray-400);
+            font-size: var(--font-size-lg);
+        }
+
+        /* Stats Overview */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all var(--transition-normal);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-3);
+            color: var(--primary);
+        }
+
+        .stat-data h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-1);
+        }
+
+        .stat-data p {
+            color: var(--gray-400);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Class Grid */
+        .section {
+            margin-bottom: var(--spacing-8);
+        }
+
+        .section-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: var(--spacing-4);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-6);
+        }
+
+        .class-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            backdrop-filter: blur(10px);
+            transition: all var(--transition-normal);
+        }
+
+        .class-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .class-card h3 {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-4);
+            color: var(--primary);
+        }
+
+        .class-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-3);
+        }
+
+        .class-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-3) var(--spacing-4);
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all var(--transition-normal);
+        }
+
+        .class-btn:hover {
+            transform: translateX(4px);
+        }
+
+        .class-btn.subjects {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .class-btn.subjects:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .class-btn.attendance {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .class-btn.attendance:hover {
+            background: rgba(16, 185, 129, 0.3);
+        }
+
+        .class-btn.analytics {
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .class-btn.analytics:hover {
+            background: rgba(139, 92, 246, 0.3);
+        }
+
+        /* Quick Access Cards */
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-6);
+        }
+
+        .quick-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            backdrop-filter: blur(10px);
+            transition: all var(--transition-normal);
+            text-decoration: none;
+            display: block;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .quick-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-4);
+        }
+
+        .quick-card.notifications .quick-card-icon {
+            color: var(--warning);
+        }
+
+        .quick-card.homework .quick-card-icon {
+            color: var(--success);
+        }
+
+        .quick-card h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-2);
+        }
+
+        .quick-card p {
+            color: var(--gray-400);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Add Subject Form */
+        .add-subject-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            backdrop-filter: blur(10px);
+            margin-top: var(--spacing-6);
+        }
+
+        .add-subject-card h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-4);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .add-subject-card h3 i {
+            color: var(--success);
+        }
+
+        .add-subject-form {
+            display: flex;
+            gap: var(--spacing-4);
+            flex-wrap: wrap;
+        }
+
+        .add-subject-form input,
+        .add-subject-form select {
+            flex: 1;
+            min-width: 200px;
+            padding: var(--spacing-3) var(--spacing-4);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: var(--font-size-base);
+            transition: all var(--transition-normal);
+        }
+
+        .add-subject-form input:focus,
+        .add-subject-form select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .add-subject-form input::placeholder {
+            color: var(--gray-400);
+        }
+
+        .add-subject-form button {
+            padding: var(--spacing-3) var(--spacing-6);
+            border-radius: var(--radius-lg);
+            border: none;
+            background: var(--success);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .add-subject-form button:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: var(--spacing-4);
+            }
+
+            .page-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .class-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .add-subject-form {
+                flex-direction: column;
+            }
+
+            .add-subject-form input,
+            .add-subject-form select,
+            .add-subject-form button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bubble Effects -->
+    <div class="bubbles">
+        <div class="bubble bubble-1"></div>
+        <div class="bubble bubble-2"></div>
+        <div class="bubble bubble-3"></div>
+        <div class="bubble bubble-4"></div>
+        <div class="bubble bubble-5"></div>
+        <div class="bubble bubble-6"></div>
+        <div class="bubble bubble-7"></div>
+        <div class="bubble bubble-8"></div>
+        <div class="bubble bubble-9"></div>
+        <div class="bubble bubble-10"></div>
+    </div>
+
+    <div class="admin-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
+            <p>Manage your school, classes, and content</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-school"></i></div>
+                <div class="stat-data">
+                    <h3>12</h3>
+                    <p>Class Levels</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-book"></i></div>
+                <div class="stat-data">
+                    <h3><%= subjectsCount || 0 %></h3>
+                    <p>Total Subjects</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-data">
+                    <h3><%= studentsCount || 0 %></h3>
+                    <p>Total Students</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-bell"></i></div>
+                <div class="stat-data">
+                    <h3><%= notificationsCount || 0 %></h3>
+                    <p>Active Notifications</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Levels -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Manage Classes (STD 1-12)</h2>
+            <div class="class-grid">
+                <% for(let i = 1; i <= 12; i++) { %>
+                <div class="class-card">
+                    <h3>STD <%= i %></h3>
+                    <div class="class-actions">
+                        <a href="/admin/class/<%= i %>" class="class-btn subjects">
+                            <i class="fas fa-book"></i> Subjects
+                        </a>
+                        <a href="/admin/attendance/<%= i %>" class="class-btn attendance">
+                            <i class="fas fa-calendar-check"></i> Attendance
+                        </a>
+                        <a href="/admin/analytics/class/<%= i %>" class="class-btn analytics">
+                            <i class="fas fa-chart-line"></i> Analytics
+                        </a>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </section>
+
+        <!-- Quick Access -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-bolt"></i> Quick Access</h2>
+            <div class="quick-access-grid">
+                <a href="/admin/notifications" class="quick-card notifications">
+                    <div class="quick-card-icon"><i class="fas fa-paper-plane"></i></div>
+                    <h3>Send Notification</h3>
+                    <p>Create and send notifications to students</p>
+                </a>
+                <a href="/admin/homework" class="quick-card homework">
+                    <div class="quick-card-icon"><i class="fas fa-book"></i></div>
+                    <h3>Homework Management</h3>
+                    <p>Create and manage homework assignments</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Add Subject -->
+        
+    </div>
+
+    <style>
+        /* Bubble animations */
+        .bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: rise 15s infinite ease-in;
+        }
+
+        .bubble-1 { left: 10%; width: 40px; height: 40px; animation-delay: 0s; }
+        .bubble-2 { left: 20%; width: 20px; height: 20px; animation-delay: 2s; }
+        .bubble-3 { left: 30%; width: 60px; height: 60px; animation-delay: 4s; }
+        .bubble-4 { left: 40%; width: 30px; height: 30px; animation-delay: 1s; }
+        .bubble-5 { left: 50%; width: 50px; height: 50px; animation-delay: 3s; }
+        .bubble-6 { left: 60%; width: 25px; height: 25px; animation-delay: 5s; }
+        .bubble-7 { left: 70%; width: 45px; height: 45px; animation-delay: 2s; }
+        .bubble-8 { left: 80%; width: 35px; height: 35px; animation-delay: 4s; }
+        .bubble-9 { left: 90%; width: 55px; height: 55px; animation-delay: 1s; }
+        .bubble-10 { left: 95%; width: 25px; height: 25px; animation-delay: 3s; }
+
+        @keyframes rise {
+            0% {
+                bottom: -100px;
+                transform: translateX(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                bottom: 100%;
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+        }
+    </style>
+</body>
+</html>

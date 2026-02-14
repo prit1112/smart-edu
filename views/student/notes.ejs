@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Notes - SmartEdu</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .notes-page-container {
+            min-height: 100vh;
+            padding: var(--spacing-8);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(138, 43, 226, 0.1));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-8);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .page-header h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .page-header p {
+            color: var(--gray-400);
+            font-size: var(--font-size-lg);
+            margin: 0;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .note-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            transition: all var(--transition-normal);
+        }
+
+        .note-card:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .note-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-3);
+        }
+
+        .note-card h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--white);
+            margin: 0;
+            flex: 1;
+        }
+
+        .note-card p {
+            font-size: var(--font-size-sm);
+            color: var(--gray-400);
+            margin-bottom: var(--spacing-4);
+            line-height: 1.5;
+        }
+
+        .note-meta {
+            display: flex;
+            gap: var(--spacing-4);
+            font-size: var(--font-size-xs);
+            color: var(--gray-500);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .note-actions {
+            display: flex;
+            gap: var(--spacing-3);
+        }
+
+        @media (max-width: 768px) {
+            .notes-page-container {
+                padding: var(--spacing-4);
+            }
+
+            .page-header {
+                padding: var(--spacing-6);
+            }
+
+            .page-header h1 {
+                font-size: var(--font-size-2xl);
+            }
+
+            .notes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bubble Effects -->
+    <div class="bubbles">
+        <div class="bubble bubble-1"></div>
+        <div class="bubble bubble-2"></div>
+        <div class="bubble bubble-3"></div>
+        <div class="bubble bubble-4"></div>
+        <div class="bubble bubble-5"></div>
+        <div class="bubble bubble-6"></div>
+        <div class="bubble bubble-7"></div>
+        <div class="bubble bubble-8"></div>
+        <div class="bubble bubble-9"></div>
+        <div class="bubble bubble-10"></div>
+    </div>
+
+    <div class="notes-page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-sticky-note"></i> Study Notes</h1>
+            <p>Access comprehensive study materials for <%= chapter ? chapter.title : 'your subjects' %></p>
+        </div>
+
+        <!-- Notes Grid -->
+        <section class="section">
+            <h2 class="section-title">Available Notes</h2>
+            <div class="notes-grid">
+                <% if (notes && notes.length > 0) { %>
+                    <% notes.forEach(note => { %>
+                    <div class="note-card">
+                        <div class="note-card-header">
+                            <h3><%= note.title %></h3>
+                            <span class="status-badge completed">Available</span>
+                        </div>
+                        <p><%= note.description || 'Study material for this chapter' %></p>
+                        <div class="note-meta">
+                            <span><i class="fas fa-file-alt"></i> <%= note.fileType || 'PDF' %></span>
+                            <span><i class="fas fa-clock"></i> <%= note.createdAt ? new Date(note.createdAt).toLocaleDateString() : 'Recently added' %></span>
+                        </div>
+                        <div class="note-actions">
+                            <a href="<%= note.fileUrl %>" target="_blank" class="btn btn-primary">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                            <a href="<%= note.fileUrl %>" target="_blank" class="btn btn-ghost">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </div>
+                    </div>
+                    <% }); %>
+                <% } else { %>
+                <div class="empty-state" style="grid-column: 1 / -1;">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>No Notes Available</h3>
+                    <p>Notes for this chapter will be uploaded soon.</p>
+                </div>
+                <% } %>
+            </div>
+        </section>
+
+        <!-- Quick Access -->
+        <section class="section">
+            <h2 class="section-title">Quick Access</h2>
+            <div class="quick-access-grid">
+                <a href="/student/subject/<%= chapter ? chapter.subject._id : '' %>" class="quick-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Subject</span>
+                </a>
+                <a href="/student/videos/<%= chapter ? chapter._id : '' %>" class="quick-btn">
+                    <i class="fas fa-video"></i>
+                    <span>View Videos</span>
+                </a>
+                <a href="/student/quiz/<%= chapter ? chapter._id : '' %>" class="quick-btn">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Take Quiz</span>
+                </a>
+                <a href="/student/performance" class="quick-btn">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Performance</span>
+                </a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

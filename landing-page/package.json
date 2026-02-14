@@ -1,0 +1,14 @@
+{
+  "name": "smart-edu-landing",
+  "version": "1.0.0",
+  "description": "Ultra-modern landing page for SmartEdu",
+  "main": "index.html",
+  "scripts": {
+    "dev": "echo 'Open index.html in browser to view the landing page'",
+    "build": "echo 'Static site - no build needed'",
+    "start": "npx http-server -p 2000"
+  },
+  "keywords": ["education", "landing-page"],
+  "author": "",
+  "license": "ISC"
+}

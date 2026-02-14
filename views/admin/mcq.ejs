@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQs - <%= chapter.title %> - SmartEdu Admin</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --success-light: #34d399;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --error: #ef4444;
+            --error-light: #f87171;
+            --info: #3b82f6;
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+            --dark-3: #334155;
+            --gray: #64748b;
+            --gray-light: #94a3b8;
+            --white: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--white);
+            overflow-x: hidden;
+        }
+        .bg-effects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%); top: -150px; left: -150px; animation: pulse 8s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%); bottom: -100px; right: -100px; animation: pulse 10s ease-in-out infinite reverse; }
+        .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 12s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        .header { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; z-index: 1000; }
+        .header-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .header-brand-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .header-brand-text { font-size: 1.35rem; font-weight: 700; background: linear-gradient(135deg, #fff 0%, var(--success-light) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-nav { display: flex; align-items: center; gap: 0.5rem; }
+        .header-nav-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 10px; text-decoration: none; color: var(--gray-light); font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; }
+        .header-nav-link:hover { color: var(--white); background: rgba(16, 185, 129, 0.1); }
+        .header-nav-link.active { color: var(--white); background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(99, 102, 241, 0.15) 100%); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .main { padding-top: 90px; padding-bottom: 3rem; min-height: 100vh; position: relative; z-index: 1; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title-section { animation: fadeInDown 0.6s ease; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .page-title-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 1rem; box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4); }
+        .page-title { font-size: 2.25rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+        .page-subtitle { color: var(--gray-light); font-size: 1rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.9rem 1.75rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--success), var(--primary-dark)); color: var(--white); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5); }
+        .btn-secondary { background: rgba(148, 163, 184, 0.1); color: var(--gray-light); border: 1px solid rgba(148, 163, 184, 0.2); }
+        .btn-secondary:hover { background: rgba(148, 163, 184, 0.2); color: var(--white); }
+        .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--error-light); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.3); }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 16px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; backdrop-filter: blur(10px); }
+        .stat-icon { width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .stat-data h3 { font-size: 1.75rem; font-weight: 700; color: var(--white); }
+        .stat-data p { color: var(--gray-light); font-size: 0.875rem; }
+        
+        /* Add MCQ Form */
+        .add-mcq-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px); margin-bottom: 2rem; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-field { margin-bottom: 0; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--gray-light); font-size: 0.875rem; }
+        .form-input, .form-select { width: 100%; padding: 0.875rem 1rem; background: rgba(15, 23, 42, 0.7); border: 1.5px solid rgba(16, 185, 129, 0.15); border-radius: 10px; color: var(--white); font-size: 0.9rem; font-family: inherit; transition: all 0.3s ease; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--success); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
+        .form-input::placeholder { color: var(--gray); }
+        .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.25rem; padding-right: 2.5rem; }
+        .full-width { grid-column: span 2; }
+        
+        /* MCQs Grid */
+        .mcqs-grid { display: grid; gap: 1.5rem; }
+        .mcq-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(20px); transition: all 0.3s ease; animation: fadeInUp 0.6s ease backwards; }
+        .mcq-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .mcq-question { font-size: 1.1rem; font-weight: 600; color: var(--white); margin-bottom: 1rem; }
+        .mcq-options { display: grid; gap: 0.5rem; margin-bottom: 1rem; }
+        .mcq-option { padding: 0.75rem 1rem; background: rgba(15, 23, 42, 0.5); border-radius: 8px; font-size: 0.9rem; }
+        .mcq-option.correct { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--success); color: var(--success-light); }
+        .mcq-meta { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--gray-light); margin-bottom: 1rem; }
+        .mcq-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        
+        .delete-form { display: inline; }
+        
+        @media (max-width: 768px) { 
+            .header { padding: 0 1rem; } 
+            .header-nav-link span { display: none; } 
+            .main { padding-top: 80px; } 
+            .page-title { font-size: 1.75rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <header class="header">
+        <a href="/admin" class="header-brand">
+            <div class="header-brand-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="header-brand-text">SmartEdu Admin</span>
+        </a>
+        <nav class="header-nav">
+            <a href="/admin" class="header-nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="/admin/homework" class="header-nav-link"><i class="fas fa-book"></i><span>Homework</span></a>
+            <a href="/admin/send-notification" class="header-nav-link"><i class="fas fa-paper-plane"></i><span>Notifications</span></a>
+            <a href="/logout" class="header-nav-link"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </nav>
+    </header>
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <div class="page-title-section">
+                    <div class="page-title-icon"><i class="fas fa-question-circle"></i></div>
+                    <h1 class="page-title">MCQs</h1>
+                    <p class="page-subtitle"><%= chapter.title %> - Manage multiple choice questions</p>
+                </div>
+                <a href="/admin/chapters/<%= chapter.subject %>" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Chapters</a>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-question-circle"></i></div>
+                    <div class="stat-data">
+                        <h3><%= mcqs.length %></h3>
+                        <p>Total MCQs</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add MCQ Form -->
+            <div class="add-mcq-card">
+                <form method="POST" action="/admin/add-mcq">
+                    <input type="hidden" name="chapterId" value="<%= chapter._id %>">
+                    <div class="form-grid">
+                        <div class="form-field full-width">
+                            <label for="question" class="form-label">Question</label>
+                            <input type="text" name="question" id="question" class="form-input" placeholder="Enter question" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="option1" class="form-label">Option 1</label>
+                            <input type="text" name="option1" id="option1" class="form-input" placeholder="Option 1" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="option2" class="form-label">Option 2</label>
+                            <input type="text" name="option2" id="option2" class="form-input" placeholder="Option 2" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="option3" class="form-label">Option 3</label>
+                            <input type="text" name="option3" id="option3" class="form-input" placeholder="Option 3" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="option4" class="form-label">Option 4</label>
+                            <input type="text" name="option4" id="option4" class="form-input" placeholder="Option 4" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="correctIndex" class="form-label">Correct Answer</label>
+                            <select name="correctIndex" id="correctIndex" class="form-select" required>
+                                <option value="0">Option 1</option>
+                                <option value="1">Option 2</option>
+                                <option value="2">Option 3</option>
+                                <option value="3">Option 4</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="marks" class="form-label">Marks</label>
+                            <input type="number" name="marks" id="marks" class="form-input" placeholder="1" value="1" min="1">
+                        </div>
+                        <div class="form-field full-width">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add MCQ
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- MCQs Grid -->
+            <div class="mcqs-grid">
+                <% mcqs.forEach(function(mcq, index) { %>
+                <div class="mcq-card" style="animation-delay: <%= index * 0.1 %>s;">
+                    <div class="mcq-question"><%= mcq.question %></div>
+                    <div class="mcq-options">
+                        <% mcq.options.forEach(function(option, optIndex) { %>
+                        <div class="mcq-option <%= optIndex === mcq.correctIndex ? 'correct' : '' %>">
+                            <%= optIndex + 1 %>. <%= option %>
+                        </div>
+                        <% }); %>
+                    </div>
+                    <div class="mcq-meta">
+                        <span><i class="fas fa-star"></i> <%= mcq.marks %> marks</span>
+                        <% if (mcq.negativeMarks && mcq.negativeMarks > 0) { %>
+                        <span><i class="fas fa-minus-circle"></i> -<%= mcq.negativeMarks %> negative</span>
+                        <% } %>
+                    </div>
+                    <div class="mcq-actions">
+                        <a href="/admin/edit-mcq/<%= mcq._id %>" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form method="POST" action="/admin/delete-mcq/<%= mcq._id %>" class="delete-form" onsubmit="return confirm('Delete this MCQ?');">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

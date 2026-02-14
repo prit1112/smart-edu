@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - SmartEdu Admin</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --success-light: #34d399;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --error: #ef4444;
+            --error-light: #f87171;
+            --info: #3b82f6;
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+            --dark-3: #334155;
+            --gray: #64748b;
+            --gray-light: #94a3b8;
+            --white: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--white);
+            overflow-x: hidden;
+        }
+        .bg-effects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%); top: -150px; left: -150px; animation: pulse 8s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%); bottom: -100px; right: -100px; animation: pulse 10s ease-in-out infinite reverse; }
+        .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 12s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        
+        .header { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; z-index: 1000; }
+        .header-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .header-brand-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .header-brand-text { font-size: 1.35rem; font-weight: 700; background: linear-gradient(135deg, #fff 0%, var(--success-light) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-nav { display: flex; align-items: center; gap: 0.5rem; }
+        .header-nav-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 10px; text-decoration: none; color: var(--gray-light); font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; }
+        .header-nav-link:hover { color: var(--white); background: rgba(16, 185, 129, 0.1); }
+        .header-nav-link.active { color: var(--white); background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(99, 102, 241, 0.15) 100%); border: 1px solid rgba(16, 185, 129, 0.3); }
+        
+        .main { padding-top: 90px; padding-bottom: 3rem; min-height: 100vh; position: relative; z-index: 1; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title-section { animation: fadeInDown 0.6s ease; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .page-title-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--warning), var(--secondary)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 1rem; box-shadow: 0 8px 30px rgba(245, 158, 11, 0.4); }
+        .page-title { font-size: 2.25rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+        .page-subtitle { color: var(--gray-light); font-size: 1rem; }
+        
+        /* Class Selector */
+        .class-selector { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        .class-btn { padding: 1rem 2rem; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; border: 2px solid rgba(16, 185, 129, 0.3); background: rgba(30, 41, 59, 0.6); color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .class-btn:hover { transform: translateY(-2px); border-color: var(--success); box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3); }
+        .class-btn.active { background: linear-gradient(135deg, var(--success), var(--primary-dark)); border-color: var(--success); }
+        
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 16px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; backdrop-filter: blur(10px); animation: fadeInUp 0.6s ease backwards; }
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .stat-icon.total { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .stat-icon.risk { background: linear-gradient(135deg, var(--error), var(--warning)); }
+        .stat-icon.avg { background: linear-gradient(135deg, var(--info), var(--primary)); }
+        .stat-data h3 { font-size: 1.75rem; font-weight: 700; color: var(--white); }
+        .stat-data p { color: var(--gray-light); font-size: 0.875rem; }
+        
+        /* Students Grid */
+        .section-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .student-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(20px); transition: all 0.3s ease; animation: fadeInUp 0.6s ease backwards; }
+        .student-card:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2); }
+        .student-card.at-risk { border-color: var(--error); }
+        .student-card.at-risk:hover { border-color: var(--error); box-shadow: 0 10px 40px rgba(239, 68, 68, 0.2); }
+        
+        .student-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+        .student-name { font-size: 1.1rem; font-weight: 600; color: var(--white); }
+        .risk-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        .risk-badge.at-risk { background: rgba(239, 68, 68, 0.2); color: var(--error-light); }
+        .risk-badge.good { background: rgba(16, 185, 129, 0.2); color: var(--success-light); }
+        
+        .student-stats { display: flex; flex-direction: column; gap: 0.75rem; }
+        .student-stat { display: flex; justify-content: space-between; align-items: center; }
+        .student-stat-label { color: var(--gray-light); font-size: 0.875rem; }
+        .student-stat-value { font-weight: 600; color: var(--white); }
+        .student-stat-value.good { color: var(--success); }
+        .student-stat-value.warning { color: var(--warning); }
+        .student-stat-value.bad { color: var(--error); }
+        
+        .progress-container { margin-top: 0.5rem; }
+        .progress-bar { height: 8px; background: rgba(15, 23, 42, 0.5); border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
+        .progress-fill.good { background: linear-gradient(90deg, var(--success), var(--success-light)); }
+        .progress-fill.warning { background: linear-gradient(90deg, var(--warning), var(--warning-light)); }
+        .progress-fill.bad { background: linear-gradient(90deg, var(--error), var(--error-light)); }
+        
+        /* Chart Section */
+        .chart-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(20px); margin-bottom: 2rem; }
+        .chart-container { position: relative; height: 400px; }
+        
+        .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--gray-light); text-decoration: none; font-weight: 500; transition: all 0.3s ease; }
+        .back-link:hover { color: var(--white); }
+        
+        .select-class-title { text-align: center; margin-bottom: 2rem; }
+        .select-class-title h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .select-class-title p { color: var(--gray-light); }
+        
+        @media (max-width: 768px) {
+            .header { padding: 0 1rem; }
+            .header-nav-link span { display: none; }
+            .main { padding-top: 80px; }
+            .page-title { font-size: 1.75rem; }
+            .students-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    
+    <header class="header">
+        <a href="/admin" class="header-brand">
+            <div class="header-brand-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="header-brand-text">SmartEdu Admin</span>
+        </a>
+        <nav class="header-nav">
+            <a href="/admin" class="header-nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="/admin/homework" class="header-nav-link"><i class="fas fa-book"></i><span>Homework</span></a>
+            <a href="/admin/send-notification" class="header-nav-link"><i class="fas fa-paper-plane"></i><span>Notifications</span></a>
+            <a href="/logout" class="header-nav-link"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </nav>
+    </header>
+    
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <div class="page-title-section">
+                    <div class="page-title-icon"><i class="fas fa-chart-bar"></i></div>
+                    <h1 class="page-title">Analytics</h1>
+                    <p class="page-subtitle">Student Performance & Attendance Analysis</p>
+                </div>
+                <a href="/admin" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            </div>
+            
+            <% if (!classLevel) { %>
+            <!-- Class Selection -->
+            <div class="select-class-title">
+                <h2>Select a Class to View Analytics</h2>
+                <p>Choose a class to see student performance and attendance data</p>
+            </div>
+            
+            <div class="class-selector" style="justify-content: center;">
+                <% for(let i = 1; i <= 12; i++) { %>
+                <a href="/admin/analytics/class/<%= i %>" class="class-btn">
+                    <i class="fas fa-graduation-cap"></i>
+                    STD <%= i %>
+                </a>
+                <% } %>
+            </div>
+            <% } else { %>
+            <!-- Analytics for Selected Class -->
+            <div class="class-selector">
+                <a href="/admin/analytics" class="back-link" style="padding: 0.75rem 1.5rem; background: rgba(30, 41, 59, 0.6); border-radius: 12px;">
+                    <i class="fas fa-arrow-left"></i> Change Class
+                </a>
+                <span style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--success), var(--primary-dark)); border-radius: 12px; font-weight: 600;">
+                    <i class="fas fa-graduation-cap"></i> STD <%= classLevel %>
+                </span>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon total"><i class="fas fa-users"></i></div>
+                    <div class="stat-data">
+                        <h3><%= studentData.length %></h3>
+                        <p>Total Students</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon risk"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="stat-data">
+                        <h3><%= studentData.filter(d => d.isAtRisk).length %></h3>
+                        <p>At Risk Students</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon avg"><i class="fas fa-percentage"></i></div>
+                    <div class="stat-data">
+                        <h3><%= studentData.length > 0 ? Math.round(studentData.reduce((sum, d) => sum + d.avgScorePercent, 0) / studentData.length) : 0 %>%</h3>
+                        <p>Average Score</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Performance Chart -->
+            <div class="chart-card">
+                <h3 class="section-title"><i class="fas fa-chart-bar"></i> Performance Overview</h3>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Student Performance Grid -->
+            <h3 class="section-title"><i class="fas fa-user-graduate"></i> Student Performance</h3>
+            <div class="students-grid">
+                <% studentData.forEach(function(student, index) { %>
+                <div class="student-card <%= student.isAtRisk ? 'at-risk' : '' %>" style="animation-delay: <%= index * 0.05 %>s;">
+                    <div class="student-header">
+                        <span class="student-name"><%= student.name %></span>
+                        <span class="risk-badge <%= student.isAtRisk ? 'at-risk' : 'good' %>">
+                            <%= student.isAtRisk ? 'At Risk' : 'Good Standing' %>
+                        </span>
+                    </div>
+                    <div class="student-stats">
+                        <div class="student-stat">
+                            <span class="student-stat-label">Total Score</span>
+                            <span class="student-stat-value"><%= student.score %></span>
+                        </div>
+                        <div class="student-stat">
+                            <span class="student-stat-label">Average Score</span>
+                            <span class="student-stat-value <%= student.avgScorePercent >= 60 ? 'good' : student.avgScorePercent >= 40 ? 'warning' : 'bad' %>">
+                                <%= student.avgScorePercent %>%
+                            </span>
+                        </div>
+                        <div class="student-stat">
+                            <span class="student-stat-label">Attendance (7 days)</span>
+                            <span class="student-stat-value <%= student.attendancePercent >= 80 ? 'good' : student.attendancePercent >= 60 ? 'warning' : 'bad' %>">
+                                <%= student.attendancePercent %>%
+                            </span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill <%= student.avgScorePercent >= 60 ? 'good' : student.avgScorePercent >= 40 ? 'warning' : 'bad' %>" style="width: <%= student.avgScorePercent %>%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+            <% } %>
+        </div>
+    </main>
+    
+    <% if (classLevel && studentData.length > 0) { %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const studentData = <%- JSON.stringify(studentData.map(d => d.name)) %>;
+        const scores = <%- JSON.stringify(studentData.map(d => d.score)) %>;
+        const colors = <%- JSON.stringify(studentData.map(d => d.isAtRisk ? '#ef4444' : '#10b981')) %>;
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: studentData,
+                datasets: [{
+                    label: 'Total Score',
+                    data: scores,
+                    backgroundColor: colors,
+                    borderColor: colors,
+                    borderWidth: 1,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleColor: '#fff',
+                        bodyColor: '#94a3b8',
+                        borderColor: 'rgba(16, 185, 129, 0.3)',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(148, 163, 184, 0.1)'
+                        },
+                        ticks: {
+                            color: '#94a3b8'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: '#94a3b8',
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    <% } %>
+</body>
+</html>

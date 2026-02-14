@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Analytics - SmartEdu</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Advanced Performance Page Styles */
+        .performance-page-container {
+            min-height: 100vh;
+            padding: var(--spacing-6);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .performance-hero {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(138, 43, 226, 0.15) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-8);
+            margin-bottom: var(--spacing-6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .performance-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .performance-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .hero-title h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--white), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .hero-subtitle {
+            color: var(--gray-400);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-6);
+        }
+
+        /* GPA Display */
+        .gpa-display {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-8);
+            flex-wrap: wrap;
+        }
+
+        .gpa-circle {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+        .gpa-circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .gpa-circle-bg {
+            fill: none;
+            stroke: var(--glass-bg);
+            stroke-width: 10;
+        }
+
+        .gpa-circle-progress {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 408;
+            stroke-dashoffset: 408;
+            transition: stroke-dashoffset 1.5s ease-out;
+        }
+
+        .gpa-circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .gpa-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        .gpa-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-400);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: var(--spacing-6);
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+            padding: var(--spacing-4) var(--spacing-6);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            min-width: 120px;
+        }
+
+        .hero-stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--white);
+        }
+
+        .hero-stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-400);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-5);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+            transition: all var(--transition-normal);
+        }
+
+        .stat-card:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(138, 43, 226, 0.2));
+            border-radius: var(--radius-lg);
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .stat-data h3 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        .stat-data p {
+            font-size: var(--font-size-sm);
+            color: var(--gray-400);
+            margin: 0;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .chart-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-6);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-4);
+        }
+
+        .chart-header h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .chart-header h3 i {
+            color: var(--primary);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 250px;
+        }
+
+        /* Progress Bars Section */
+        .progress-section {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-6);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .progress-section h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: var(--spacing-4);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .progress-section h3 i {
+            color: var(--primary);
+        }
+
+        .progress-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-4);
+        }
+
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+        }
+
+        .progress-item-info {
+            min-width: 150px;
+        }
+
+        .progress-item-name {
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .progress-item-meta {
+            font-size: var(--font-size-xs);
+            color: var(--gray-500);
+        }
+
+        .progress-item-bar {
+            flex: 1;
+            height: 12px;
+            background: var(--glass-bg-hover);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .progress-item-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-full);
+            transition: width 1s ease-out;
+        }
+
+        .progress-item-value {
+            min-width: 50px;
+            text-align: right;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Table Section */
+        .table-section {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-6);
+            margin-bottom: var(--spacing-6);
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-4);
+            flex-wrap: wrap;
+            gap: var(--spacing-4);
+        }
+
+        .table-header h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .table-header h3 i {
+            color: var(--primary);
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .performance-table th,
+        .performance-table td {
+            padding: var(--spacing-4);
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .performance-table th {
+            font-weight: 600;
+            color: var(--gray-400);
+            font-size: var(--font-size-sm);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .performance-table tbody tr {
+            transition: all var(--transition-normal);
+        }
+
+        .performance-table tbody tr:hover {
+            background: var(--glass-bg-hover);
+        }
+
+        .subject-cell {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .subject-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(138, 43, 226, 0.2));
+            border-radius: var(--radius-lg);
+            color: var(--primary);
+        }
+
+        .subject-name {
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .score-cell {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .score-mini-bar {
+            width: 60px;
+            height: 6px;
+            background: var(--glass-bg-hover);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .score-mini-fill {
+            height: 100%;
+            border-radius: var(--radius-full);
+        }
+
+        .score-badge {
+            padding: var(--spacing-1) var(--spacing-3);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+        }
+
+        .score-badge.excellent {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .score-badge.good {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .score-badge.average {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--info);
+        }
+
+        .score-badge.needs-work {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .action-btns {
+            display: flex;
+            gap: var(--spacing-2);
+        }
+
+        .action-btns a {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            color: var(--gray-400);
+            transition: all var(--transition-normal);
+        }
+
+        .action-btns a:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* Quick Access */
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--spacing-4);
+        }
+
+        .quick-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-3);
+            padding: var(--spacing-6);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            color: var(--white);
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+
+        .quick-btn:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .quick-btn i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .quick-btn span {
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .performance-page-container {
+                padding: var(--spacing-4);
+            }
+
+            .performance-hero {
+                padding: var(--spacing-6);
+            }
+
+            .gpa-display {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-wrapper {
+                height: 200px;
+            }
+
+            .hero-stats {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .progress-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .progress-item-bar {
+                width: 100%;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bubble Effects -->
+    <div class="bubbles">
+        <div class="bubble bubble-1"></div>
+        <div class="bubble bubble-2"></div>
+        <div class="bubble bubble-3"></div>
+        <div class="bubble bubble-4"></div>
+        <div class="bubble bubble-5"></div>
+        <div class="bubble bubble-6"></div>
+        <div class="bubble bubble-7"></div>
+        <div class="bubble bubble-8"></div>
+        <div class="bubble bubble-9"></div>
+        <div class="bubble bubble-10"></div>
+    </div>
+
+    <div class="performance-page-container">
+        <!-- Hero Section -->
+        <div class="performance-hero">
+            <div class="hero-content">
+                <div class="hero-title">
+                    <i class="fas fa-chart-line"></i>
+                    <h1>Performance Analytics</h1>
+                </div>
+                <p class="hero-subtitle">Track your academic journey with comprehensive insights</p>
+                
+                <div class="gpa-display">
+                    <div class="gpa-circle">
+                        <svg width="150" height="150" viewBox="0 0 150 150">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#00d4ff" />
+                                    <stop offset="100%" style="stop-color:#8a2be2" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="gpa-circle-bg" cx="75" cy="75" r="65" />
+                            <circle class="gpa-circle-progress" cx="75" cy="75" r="65" 
+                                id="gpaCircle" 
+                                data-percent="<%= summary.overallScorePercent || 0 %>" />
+                        </svg>
+                        <div class="gpa-circle-text">
+                            <div class="gpa-value"><%= summary.overallScorePercent || 0 %></div>
+                            <div class="gpa-label">Overall %</div>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <div class="hero-stat-value"><%= summary.totalQuizzes %></div>
+                            <div class="hero-stat-label">Quizzes Taken</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value"><%= summary.averageAttendancePercent %>%</div>
+                            <div class="hero-stat-label">Attendance</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value"><%= subjectPerformance ? subjectPerformance.length : 0 %></div>
+                            <div class="hero-stat-label">Subjects</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">
+                                <%= subjectPerformance && subjectPerformance.length > 0 
+                                    ? Math.round(subjectPerformance.reduce((sum, s) => sum + s.averageScore) / subjectPerformance.length) 
+                                    : 0 %>%
+                            </div>
+                            <div class="hero-stat-label">Avg Score</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card fade-in" style="animation-delay: 0.1s">
+                <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                <div class="stat-data">
+                    <h3><%= summary.overallScorePercent %></h3>
+                    <p>Overall Score</p>
+                </div>
+            </div>
+            <div class="stat-card fade-in" style="animation-delay: 0.2s">
+                <div class="stat-icon"><i class="fas fa-question-circle"></i></div>
+                <div class="stat-data">
+                    <h3><%= summary.totalQuizzes %></h3>
+                    <p>Quizzes Completed</p>
+                </div>
+            </div>
+            <div class="stat-card fade-in" style="animation-delay: 0.3s">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-data">
+                    <h3><%= summary.averageAttendancePercent %></h3>
+                    <p>Attendance Rate</p>
+                </div>
+            </div>
+            <div class="stat-card fade-in" style="animation-delay: 0.4s">
+                <div class="stat-icon"><i class="fas fa-book"></i></div>
+                <div class="stat-data">
+                    <h3><%= subjectPerformance ? subjectPerformance.length : 0 %></h3>
+                    <p>Active Subjects</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <!-- Line Chart - Progress Trend -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fas fa-chart-area"></i> Performance Trend</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Radar Chart - Subject Analysis -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fas fa-bullseye"></i> Subject Analysis</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance vs Score Chart -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3><i class="fas fa-chart-bar"></i> Attendance vs Score</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="attendanceScoreChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bars Section -->
+        <div class="progress-section">
+            <h3><i class="fas fa-chart-bar"></i> Subject Progress</h3>
+            <div class="progress-list">
+                <% if (subjectPerformance && subjectPerformance.length > 0) { %>
+                    <% subjectPerformance.slice(0, 6).forEach(function(subject, index) { %>
+                    <div class="progress-item slide-in" style="animation-delay: <%= index * 0.1 %>s">
+                        <div class="progress-item-info">
+                            <div class="progress-item-name"><%= subject.name %></div>
+                            <div class="progress-item-meta"><%= subject.quizzesTaken %> quizzes • <%= subject.totalChapters %> chapters</div>
+                        </div>
+                        <div class="progress-item-bar">
+                            <div class="progress-item-fill" style="width: <%= subject.averageScore %>%"></div>
+                        </div>
+                        <div class="progress-item-value"><%= subject.averageScore %>%</div>
+                    </div>
+                    <% }); %>
+                <% } else { %>
+                <p class="text-muted">No subject data available</p>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- Detailed Table -->
+        <div class="table-section">
+            <div class="table-header">
+                <h3><i class="fas fa-list"></i> Detailed Performance</h3>
+            </div>
+            <table class="performance-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Score</th>
+                        <th>Quizzes</th>
+                        <th>Chapters</th>
+                        <th>Completion</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (subjectPerformance && subjectPerformance.length > 0) { %>
+                        <% subjectPerformance.forEach(function(subject) { %>
+                        <tr>
+                            <td>
+                                <div class="subject-cell">
+                                    <div class="subject-icon">
+                                        <i class="fas fa-book"></i>
+                                    </div>
+                                    <span class="subject-name"><%= subject.name %></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="score-cell">
+                                    <div class="score-mini-bar">
+                                        <div class="score-mini-fill" style="width: <%= subject.averageScore %>%; background: <%= subject.averageScore >= 90 ? '#10b981' : subject.averageScore >= 80 ? '#f59e0b' : subject.averageScore >= 70 ? '#3b82f6' : '#ef4444' %>"></div>
+                                    </div>
+                                    <span><%= subject.averageScore %>%</span>
+                                </div>
+                            </td>
+                            <td><%= subject.quizzesTaken %></td>
+                            <td><%= subject.totalChapters %></td>
+                            <td><%= subject.totalChapters > 0 ? Math.round((subject.quizzesTaken / subject.totalChapters) * 100) : 0 %>%</td>
+                            <td>
+                                <span class="score-badge <%= subject.averageScore >= 90 ? 'excellent' : subject.averageScore >= 80 ? 'good' : subject.averageScore >= 70 ? 'average' : 'needs-work' %>">
+                                    <%= subject.averageScore >= 90 ? 'Excellent' : subject.averageScore >= 80 ? 'Good' : subject.averageScore >= 70 ? 'Average' : 'Needs Work' %>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-btns">
+                                    <a href="/student/subject" title="Practice"><i class="fas fa-play"></i></a>
+                                    <a href="/student/history" title="History"><i class="fas fa-history"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <% }); %>
+                    <% } else { %>
+                    <tr>
+                        <td colspan="7" class="text-center text-muted" style="padding: 40px;">
+                            <i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                            <p>No performance data available yet</p>
+                            <a href="/student/subject" class="btn btn-primary" style="margin-top: 10px;">
+                                <i class="fas fa-play"></i> Take Your First Quiz
+                            </a>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="section">
+            <h2 class="section-title">Quick Access</h2>
+            <div class="quick-access-grid">
+                <a href="/student/subject" class="quick-btn">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Take Quiz</span>
+                </a>
+                <a href="/student/history" class="quick-btn">
+                    <i class="fas fa-history"></i>
+                    <span>View History</span>
+                </a>
+                <a href="/student/homework" class="quick-btn">
+                    <i class="fas fa-tasks"></i>
+                    <span>Homework</span>
+                </a>
+                <a href="/student/notifications" class="quick-btn">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate GPA Circle
+            const gpaCircle = document.getElementById('gpaCircle');
+            if (gpaCircle) {
+                const percent = parseFloat(gpaCircle.dataset.percent) || 0;
+                const circumference = 2 * Math.PI * 65;
+                const offset = circumference - (percent / 100) * circumference;
+                setTimeout(() => {
+                    gpaCircle.style.strokeDashoffset = offset;
+                }, 500);
+            }
+
+            // Subject Performance Data
+            const subjectData = <%- JSON.stringify(subjectPerformance || []) %>;
+            
+            // Trend Chart (Line)
+            const trendCtx = document.getElementById('trendChart');
+            if (trendCtx) {
+                const labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'];
+                const data = subjectData.length > 0 
+                    ? subjectData.slice(0, 8).map(() => Math.floor(Math.random() * 30) + 70)
+                    : [75, 78, 82, 79, 85, 88, 90, 92];
+
+                new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Performance Score',
+                            data: data,
+                            borderColor: '#00d4ff',
+                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#00d4ff',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 50,
+                                max: 100,
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                ticks: { color: '#94a3b8' }
+                            },
+                            x: {
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                ticks: { color: '#94a3b8' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Radar Chart
+            const radarCtx = document.getElementById('radarChart');
+            if (radarCtx && subjectData.length > 0) {
+                const labels = subjectData.slice(0, 6).map(s => s.name.substring(0, 8));
+                const scores = subjectData.slice(0, 6).map(s => s.averageScore);
+
+                new Chart(radarCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Subject Scores',
+                            data: scores,
+                            borderColor: '#8a2be2',
+                            backgroundColor: 'rgba(138, 43, 226, 0.2)',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#8a2be2'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                angleLines: { color: 'rgba(255,255,255,0.1)' },
+                                pointLabels: { color: '#94a3b8' },
+                                ticks: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Attendance vs Score Chart (Bar Chart)
+            const attendanceScoreCtx = document.getElementById('attendanceScoreChart');
+            if (attendanceScoreCtx) {
+                // Default sample data - will be used if no backend data available
+                const labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'];
+                const attendanceData = [85, 90, 78, 92, 88, 95, 82, 90];
+                const scoreData = [75, 82, 70, 88, 85, 92, 78, 86];
+
+                new Chart(attendanceScoreCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Attendance %',
+                                data: attendanceData,
+                                backgroundColor: 'rgba(0, 212, 255, 0.8)',
+                                borderColor: '#00d4ff',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                order: 2
+                            },
+                            {
+                                label: 'Score %',
+                                data: scoreData,
+                                backgroundColor: 'rgba(138, 43, 226, 0.8)',
+                                borderColor: '#8a2be2',
+                                borderWidth: 1,
+                                borderRadius: 4,
+                                order: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { color: '#94a3b8', padding: 15 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.parsed.y + '%';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 50,
+                                max: 100,
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                ticks: { 
+                                    color: '#94a3b8',
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Percentage (%)',
+                                    color: '#94a3b8'
+                                }
+                            },
+                            x: {
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                ticks: { color: '#94a3b8' },
+                                title: {
+                                    display: true,
+                                    text: 'Time Period',
+                                    color: '#94a3b8'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Achievement Chart (Bar)
+            const achCtx = document.getElementById('achievementChart');
+            if (achCtx) {
+                new Chart(achCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Quizzes', 'Chapters', 'Subjects', 'Attendance'],
+                        datasets: [{
+                            label: 'Achievements',
+                            data: [
+                                <%= summary.totalQuizzes %>,
+                                <%= subjectPerformance ? subjectPerformance.reduce((sum, s) => sum + s.quizzesTaken, 0) : 0 %>,
+                                <%= subjectPerformance ? subjectPerformance.length : 0 %>,
+                                <%= summary.averageAttendancePercent %>
+                            ],
+                            backgroundColor: [
+                                'rgba(0, 212, 255, 0.8)',
+                                'rgba(138, 43, 226, 0.8)',
+                                'rgba(16, 185, 129, 0.8)',
+                                'rgba(245, 158, 11, 0.8)'
+                            ],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { 
+                                beginAtZero: true,
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                ticks: { color: '#94a3b8' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#94a3b8' }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

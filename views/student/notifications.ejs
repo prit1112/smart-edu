@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - SmartEdu</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="/css/notifications.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Additional custom styles */
+        .notifications-page-container {
+            min-height: 100vh;
+            padding: var(--spacing-6);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(138, 43, 226, 0.15) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-8);
+            margin-bottom: var(--spacing-6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .page-header h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--white), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header h1 i {
+            font-size: 2rem;
+            color: var(--primary);
+            -webkit-text-fill-color: initial;
+        }
+
+        .page-header p {
+            color: var(--gray-400);
+            font-size: var(--font-size-lg);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all var(--transition-normal);
+        }
+
+        .stat-card:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .stat-card-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        .stat-card-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-400);
+            margin-top: var(--spacing-2);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: var(--spacing-3);
+            margin-bottom: var(--spacing-6);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: var(--spacing-3) var(--spacing-5);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            color: var(--gray-300);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--primary);
+            color: var(--white);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(138, 43, 226, 0.2));
+            border-color: var(--primary);
+            color: var(--white);
+        }
+
+        .notifications-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-4);
+        }
+
+        .notification-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-5);
+            display: flex;
+            gap: var(--spacing-4);
+            transition: all var(--transition-normal);
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: var(--glass-bg-hover);
+            transform: translateX(4px);
+            border-color: var(--primary);
+        }
+
+        .notification-item.unseen {
+            border-left: 4px solid var(--primary);
+            background: linear-gradient(90deg, rgba(0, 212, 255, 0.05), transparent);
+        }
+
+        .notification-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.info {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .notification-icon.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .notification-icon.urgent {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .notification-message {
+            color: var(--gray-400);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .notification-time {
+            color: var(--gray-500);
+            font-size: var(--font-size-xs);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-16);
+            background: var(--glass-bg);
+            border: 1px dashed var(--glass-border);
+            border-radius: var(--radius-2xl);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--gray-600);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .empty-state h3 {
+            color: var(--white);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .empty-state p {
+            color: var(--gray-400);
+        }
+
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: var(--spacing-4);
+            margin-top: var(--spacing-8);
+        }
+
+        .quick-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-3);
+            padding: var(--spacing-6);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            color: var(--white);
+            text-decoration: none;
+            transition: all var(--transition-normal);
+        }
+
+        .quick-btn:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .quick-btn i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .quick-btn span {
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .notifications-page-container {
+                padding: var(--spacing-4);
+            }
+            
+            .page-header {
+                padding: var(--spacing-6);
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bubble Effects -->
+    <div class="bubbles">
+        <div class="bubble bubble-1"></div>
+        <div class="bubble bubble-2"></div>
+        <div class="bubble bubble-3"></div>
+        <div class="bubble bubble-4"></div>
+        <div class="bubble bubble-5"></div>
+        <div class="bubble bubble-6"></div>
+        <div class="bubble bubble-7"></div>
+        <div class="bubble bubble-8"></div>
+        <div class="bubble bubble-9"></div>
+        <div class="bubble bubble-10"></div>
+    </div>
+
+    <div class="notifications-page-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-bell"></i> Notifications</h1>
+            <p>Stay informed with the latest updates and announcements</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-value" id="totalNotifications">0</div>
+                <div class="stat-card-label">Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value" id="unreadNotifications">0</div>
+                <div class="stat-card-label">Unread</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value" id="urgentNotifications">0</div>
+                <div class="stat-card-label">Urgent</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-value" id="recentNotifications">0</div>
+                <div class="stat-card-label">This Week</div>
+            </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all"><i class="fas fa-list"></i> All</button>
+            <button class="filter-btn" data-filter="unread"><i class="fas fa-envelope"></i> Unread</button>
+            <button class="filter-btn" data-filter="urgent"><i class="fas fa-exclamation-triangle"></i> Urgent</button>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="notifications-list" id="notificationsList">
+            <div class="empty-state">
+                <i class="fas fa-bell-slash"></i>
+                <h3>No notifications</h3>
+                <p>You're all caught up!</p>
+            </div>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="quick-access-grid">
+            <a href="/student" class="quick-btn">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="/student/subject" class="quick-btn">
+                <i class="fas fa-book"></i>
+                <span>Subjects</span>
+            </a>
+            <a href="/student/performance" class="quick-btn">
+                <i class="fas fa-chart-line"></i>
+                <span>Performance</span>
+            </a>
+            <a href="/student/history" class="quick-btn">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        window.notificationsData = <%- JSON.stringify(notificationsData || []) %>;
+        
+        // Function to mark notification as seen
+        async function markAsSeen(notificationId) {
+            try {
+                const response = await fetch('/student/notifications/mark-seen', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ notificationId: notificationId })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    // Update the UI
+                    const notificationItem = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
+                    if (notificationItem) {
+                        notificationItem.classList.remove('unseen');
+                        notificationItem.style.borderLeft = '4px solid #10b981';
+                    }
+                    
+                    // Update the unread count
+                    const unreadCount = document.getElementById('unreadNotifications');
+                    if (unreadCount) {
+                        unreadCount.textContent = Math.max(0, parseInt(unreadCount.textContent) - 1);
+                    }
+                }
+            } catch (error) {
+                console.error('Error marking notification as seen:', error);
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var notifications = window.notificationsData || [];
+            var container = document.getElementById('notificationsList');
+            
+            // Update stats
+            document.getElementById('totalNotifications').textContent = notifications.length;
+            document.getElementById('unreadNotifications').textContent = notifications.filter(function(n) { return !n.isSeen; }).length;
+            document.getElementById('urgentNotifications').textContent = notifications.filter(function(n) { return n.type === 'urgent'; }).length;
+            
+            // Calculate recent notifications (last 7 days)
+            var oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            document.getElementById('recentNotifications').textContent = notifications.filter(function(n) { 
+                return new Date(n.createdAt) >= oneWeekAgo; 
+            }).length;
+            
+            // Render notifications
+            if (notifications.length > 0) {
+                var html = '';
+                notifications.forEach(function(n) {
+                    var icon = 'info-circle';
+                    if (n.type === 'urgent') icon = 'exclamation-triangle';
+                    else if (n.type === 'warning') icon = 'exclamation-circle';
+                    
+                    var seenClass = n.isSeen ? '' : 'unseen';
+                    html += '<div class="notification-item ' + seenClass + '" data-id="' + n._id + '" onclick="markAsSeen(\'' + n._id + '\')">';
+                    html += '<div class="notification-icon ' + n.type + '">';
+                    html += '<i class="fas fa-' + icon + '"></i>';
+                    html += '</div>';
+                    html += '<div class="notification-content">';
+                    html += '<div class="notification-title">' + n.title + '</div>';
+                    html += '<div class="notification-message">' + n.message + '</div>';
+                    html += '<div class="notification-time">' + new Date(n.createdAt).toLocaleDateString() + '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+                container.innerHTML = html;
+            }
+
+            // Filter functionality
+            document.querySelectorAll('.filter-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+                    this.classList.add('active');
+                    var filter = this.dataset.filter;
+                    
+                    var filtered = notifications.filter(function(n) {
+                        if (filter === 'unread') return !n.isSeen;
+                        if (filter === 'urgent') return n.type === 'urgent';
+                        return true;
+                    });
+                    
+                    if (filtered.length > 0) {
+                        var html = '';
+                        filtered.forEach(function(n) {
+                            var icon = 'info-circle';
+                            if (n.type === 'urgent') icon = 'exclamation-triangle';
+                            else if (n.type === 'warning') icon = 'exclamation-circle';
+                            
+                            var seenClass = n.isSeen ? '' : 'unseen';
+                            html += '<div class="notification-item ' + seenClass + '" data-id="' + n._id + '">';
+                            html += '<div class="notification-icon ' + n.type + '">';
+                            html += '<i class="fas fa-' + icon + '"></i>';
+                            html += '</div>';
+                            html += '<div class="notification-content">';
+                            html += '<div class="notification-title">' + n.title + '</div>';
+                            html += '<div class="notification-message">' + n.message + '</div>';
+                            html += '<div class="notification-time">' + new Date(n.createdAt).toLocaleDateString() + '</div>';
+                            html += '</div>';
+                            html += '</div>';
+                        });
+                        container.innerHTML = html;
+                    } else {
+                        container.innerHTML = '<div class="empty-state"><i class="fas fa-bell-slash"></i><h3>No notifications</h3><p>No notifications match this filter</p></div>';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

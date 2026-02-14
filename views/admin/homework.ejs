@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework Management - SmartEdu Admin</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --success-light: #34d399;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --error: #ef4444;
+            --error-light: #f87171;
+            --info: #3b82f6;
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+            --dark-3: #334155;
+            --gray: #64748b;
+            --gray-light: #94a3b8;
+            --white: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--white);
+            overflow-x: hidden;
+        }
+        .bg-effects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%); top: -150px; left: -150px; animation: pulse 8s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%); bottom: -100px; right: -100px; animation: pulse 10s ease-in-out infinite reverse; }
+        .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 12s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        .header { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; z-index: 1000; }
+        .header-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .header-brand-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .header-brand-text { font-size: 1.35rem; font-weight: 700; background: linear-gradient(135deg, #fff 0%, var(--success-light) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-nav { display: flex; align-items: center; gap: 0.5rem; }
+        .header-nav-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 10px; text-decoration: none; color: var(--gray-light); font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; position: relative; }
+        .header-nav-link:hover { color: var(--white); background: rgba(16, 185, 129, 0.1); }
+        .header-nav-link.active { color: var(--white); background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(99, 102, 241, 0.15) 100%); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .main { padding-top: 90px; padding-bottom: 3rem; min-height: 100vh; position: relative; z-index: 1; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title-section { animation: fadeInDown 0.6s ease; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .page-title-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 1rem; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4); }
+        .page-title { font-size: 2.25rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+        .page-subtitle { color: var(--gray-light); font-size: 1rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.9rem 1.75rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--success), var(--primary-dark)); color: var(--white); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5); }
+        .btn-secondary { background: rgba(148, 163, 184, 0.1); color: var(--gray-light); border: 1px solid rgba(148, 163, 184, 0.2); }
+        .btn-secondary:hover { background: rgba(148, 163, 184, 0.2); color: var(--white); }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; }
+        .btn-danger { background: rgba(239, 68, 68, 0.2); color: var(--error-light); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.3); }
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        @media (max-width: 1024px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) { .stats-row { grid-template-columns: 1fr; } }
+        .stat-box { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 16px; padding: 1.25rem; display: flex; align-items: center; gap: 1rem; transition: all 0.3s ease; animation: fadeInUp 0.5s ease backwards; }
+        .stat-box:nth-child(1) { animation-delay: 0.1s; } .stat-box:nth-child(2) { animation-delay: 0.2s; } .stat-box:nth-child(3) { animation-delay: 0.3s; } .stat-box:nth-child(4) { animation-delay: 0.4s; }
+        .stat-box:hover { transform: translateY(-3px); border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .stat-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; }
+        .stat-icon.primary { background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(99, 102, 241, 0.1)); color: var(--primary-light); }
+        .stat-icon.success { background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.1)); color: var(--success); }
+        .stat-icon.warning { background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.1)); color: var(--warning); }
+        .stat-icon.info { background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.1)); color: var(--info); }
+        .stat-info h3 { font-size: 1.65rem; font-weight: 700; color: var(--white); line-height: 1; margin-bottom: 0.25rem; }
+        .stat-info p { font-size: 0.8rem; color: var(--gray-light); text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        /* Filters */
+        .filters-section { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; }
+        .filters-form { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end; }
+        .filter-group { flex: 1; min-width: 200px; }
+        .filter-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--gray-light); font-size: 0.875rem; }
+        .form-input { width: 100%; padding: 0.875rem 1rem; background: rgba(15, 23, 42, 0.7); border: 1.5px solid rgba(16, 185, 129, 0.15); border-radius: 10px; color: var(--white); font-size: 0.9rem; font-family: inherit; transition: all 0.3s ease; }
+        .form-input:focus { outline: none; border-color: var(--success); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); background: rgba(15, 23, 42, 0.9); }
+        select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.25rem; padding-right: 2.5rem; }
+        
+        /* Homework List */
+        .homework-grid { display: grid; gap: 1.5rem; }
+        .homework-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(20px); transition: all 0.3s ease; animation: fadeInUp 0.5s ease backwards; }
+        .homework-card:hover { transform: translateY(-3px); border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2); }
+        .homework-card:nth-child(1) { animation-delay: 0.1s; }
+        .homework-card:nth-child(2) { animation-delay: 0.15s; }
+        .homework-card:nth-child(3) { animation-delay: 0.2s; }
+        .homework-card:nth-child(4) { animation-delay: 0.25s; }
+        .homework-card:nth-child(5) { animation-delay: 0.3s; }
+        .homework-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+        .homework-title { font-size: 1.25rem; font-weight: 600; color: var(--white); }
+        .homework-status { padding: 0.375rem 0.875rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .homework-status.active { background: rgba(16, 185, 129, 0.2); color: var(--success-light); }
+        .homework-status.inactive { background: rgba(148, 163, 184, 0.2); color: var(--gray-light); }
+        .homework-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .detail-item { display: flex; align-items: center; gap: 0.5rem; color: var(--gray-light); font-size: 0.875rem; }
+        .detail-item i { color: var(--success); width: 20px; }
+        .homework-stats { display: flex; gap: 2rem; padding: 1rem 0; border-top: 1px solid rgba(16, 185, 129, 0.1); border-bottom: 1px solid rgba(16, 185, 129, 0.1); margin-bottom: 1.5rem; }
+        .stat-item { display: flex; flex-direction: column; align-items: center; }
+        .stat-number { font-size: 1.5rem; font-weight: 700; color: var(--white); }
+        .stat-label { font-size: 0.75rem; color: var(--gray-light); text-transform: uppercase; letter-spacing: 0.05em; }
+        .homework-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .empty-state { text-align: center; padding: 4rem 2rem; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; }
+        .empty-state i { font-size: 4rem; color: var(--gray); margin-bottom: 1rem; }
+        .empty-state h3 { font-size: 1.5rem; color: var(--white); margin-bottom: 0.5rem; }
+        .empty-state p { color: var(--gray-light); margin-bottom: 1.5rem; }
+        
+        @media (max-width: 768px) { 
+            .header { padding: 0 1rem; } 
+            .header-nav-link span { display: none; } 
+            .main { padding-top: 80px; } 
+            .page-title { font-size: 1.75rem; }
+            .page-header { flex-direction: column; align-items: flex-start; }
+            .homework-stats { flex-wrap: wrap; gap: 1rem; }
+            .stat-item { min-width: 80px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <header class="header">
+        <a href="/admin" class="header-brand">
+            <div class="header-brand-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="header-brand-text">SmartEdu Admin</span>
+        </a>
+        <nav class="header-nav">
+            <a href="/admin" class="header-nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="/admin/send-notification" class="header-nav-link"><i class="fas fa-paper-plane"></i><span>Notifications</span></a>
+            <a href="/admin/homework" class="header-nav-link active"><i class="fas fa-book"></i><span>Homework</span></a>
+            <a href="/logout" class="header-nav-link"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </nav>
+    </header>
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <div class="page-title-section">
+                    <div class="page-title-icon"><i class="fas fa-book"></i></div>
+                    <h1 class="page-title">Homework Management</h1>
+                    <p class="page-subtitle">Create and manage homework assignments for your students</p>
+                </div>
+                <a href="/admin/homework/create" class="btn btn-primary"><i class="fas fa-plus"></i> Create Homework</a>
+            </div>
+            
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-icon primary"><i class="fas fa-book"></i></div>
+                    <div class="stat-info"><h3><%= homeworksWithStats ? homeworksWithStats.length : '0' %></h3><p>Total Homework</p></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon success"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info"><h3><%= homeworksWithStats ? homeworksWithStats.filter(h => h.isActive).length : '0' %></h3><p>Active</p></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon warning"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info"><h3><%= homeworksWithStats ? homeworksWithStats.filter(h => h.stats && h.stats.pending > 0).length : '0' %></h3><p>Pending Submissions</p></div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-icon info"><i class="fas fa-users"></i></div>
+                    <div class="stat-info"><h3><%= homeworksWithStats ? homeworksWithStats.reduce((sum, h) => sum + (h.stats ? h.stats.submitted : 0), 0) : '0' %></h3><p>Total Submitted</p></div>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filters-section">
+                <form method="GET" action="/admin/homework" class="filters-form">
+                    <div class="filter-group">
+                        <label for="classLevel">Class Level</label>
+                        <select name="classLevel" id="classLevel" class="form-input">
+                            <option value="">All Classes</option>
+                            <% for(let i = 1; i <= 12; i++) { %>
+                                <option value="<%= i %>" <%= classLevel == i ? 'selected' : '' %>>STD <%= i %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="subject">Subject</label>
+                        <select name="subject" id="subject" class="form-input">
+                            <option value="">All Subjects</option>
+                            <% if (subjects && subjects.length > 0) { %>
+                                <% subjects.forEach(function(sub) { %>
+                                    <% if (sub && sub._id && sub.name) { %>
+                                        <option value="<%= sub._id %>" <%= subject == sub._id.toString() ? 'selected' : '' %>><%= sub.name %></option>
+                                    <% } %>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="status">Status</label>
+                        <select name="status" id="status" class="form-input">
+                            <option value="">All Status</option>
+                            <option value="active" <%= status == 'active' ? 'selected' : '' %>>Active</option>
+                            <option value="inactive" <%= status == 'inactive' ? 'selected' : '' %>>Inactive</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-filter"></i> Filter</button>
+                </form>
+            </div>
+            
+            <!-- Homework List -->
+            <% if (homeworksWithStats && homeworksWithStats.length > 0) { %>
+                <div class="homework-grid">
+                    <% homeworksWithStats.forEach(function(hw) { %>
+                        <% if (hw && hw._id && hw.title) { %>
+                            <div class="homework-card">
+                                <div class="homework-header">
+                                    <h3 class="homework-title"><%= hw.title %></h3>
+                                    <span class="homework-status <%= hw.isActive ? 'active' : 'inactive' %>"><%= hw.isActive ? 'Active' : 'Inactive' %></span>
+                                </div>
+                                <div class="homework-details">
+                                    <div class="detail-item">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        <span>STD <%= hw.classLevel %></span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-book"></i>
+                                        <span><%= hw.subject ? hw.subject.name : 'N/A' %></span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>Due: <%= new Date(hw.dueDate).toLocaleDateString() %></span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-star"></i>
+                                        <span>Marks: <%= hw.maxMarks %></span>
+                                    </div>
+                                </div>
+                                <div class="homework-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-number"><%= hw.stats ? hw.stats.submitted : '0' %></span>
+                                        <span class="stat-label">Submitted</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number"><%= hw.stats ? hw.stats.pending : '0' %></span>
+                                        <span class="stat-label">Pending</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-number"><%= hw.stats ? hw.stats.completionRate : '0' %>%</span>
+                                        <span class="stat-label">Completion</span>
+                                    </div>
+                                </div>
+                                <div class="homework-actions">
+                                    <a href="/admin/homework/<%= hw._id %>" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> View</a>
+                                    <a href="/admin/homework/<%= hw._id %>/edit" class="btn btn-secondary btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                                    <form method="POST" action="/admin/homework/<%= hw._id %>/delete" onsubmit="return confirm('Delete this homework and all submissions?');" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <i class="fas fa-book-open"></i>
+                    <h3>No Homework Found</h3>
+                    <p>You haven't created any homework assignments yet.</p>
+                    <a href="/admin/homework/create" class="btn btn-primary"><i class="fas fa-plus"></i> Create Your First Homework</a>
+                </div>
+            <% } %>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-submit form on filter change
+            const filterSelects = document.querySelectorAll('.filters-form select');
+            filterSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    // Don't auto-submit for the submit button's own filter
+                    if (this.id !== 'status') {
+                        this.closest('form').querySelector('button[type="submit"]').click();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

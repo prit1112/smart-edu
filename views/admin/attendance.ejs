@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance - STD <%= classLevel %> - SmartEdu Admin</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --success-light: #34d399;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --error: #ef4444;
+            --error-light: #f87171;
+            --info: #3b82f6;
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+            --dark-3: #334155;
+            --gray: #64748b;
+            --gray-light: #94a3b8;
+            --white: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--white);
+            overflow-x: hidden;
+        }
+        .bg-effects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%); top: -150px; left: -150px; animation: pulse 8s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%); bottom: -100px; right: -100px; animation: pulse 10s ease-in-out infinite reverse; }
+        .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 12s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        
+        .header { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; z-index: 1000; }
+        .header-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .header-brand-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .header-brand-text { font-size: 1.35rem; font-weight: 700; background: linear-gradient(135deg, #fff 0%, var(--success-light) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-nav { display: flex; align-items: center; gap: 0.5rem; }
+        .header-nav-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 10px; text-decoration: none; color: var(--gray-light); font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; }
+        .header-nav-link:hover { color: var(--white); background: rgba(16, 185, 129, 0.1); }
+        .header-nav-link.active { color: var(--white); background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(99, 102, 241, 0.15) 100%); border: 1px solid rgba(16, 185, 129, 0.3); }
+        
+        .main { padding-top: 90px; padding-bottom: 3rem; min-height: 100vh; position: relative; z-index: 1; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title-section { animation: fadeInDown 0.6s ease; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .page-title-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--info), var(--primary)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 1rem; box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4); }
+        .page-title { font-size: 2.25rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+        .page-subtitle { color: var(--gray-light); font-size: 1rem; }
+        
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 16px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; backdrop-filter: blur(10px); animation: fadeInUp 0.6s ease backwards; }
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .stat-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+        .stat-icon.total { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .stat-icon.present { background: linear-gradient(135deg, var(--success), var(--info)); }
+        .stat-icon.absent { background: linear-gradient(135deg, var(--error), var(--warning)); }
+        .stat-icon.rate { background: linear-gradient(135deg, var(--info), var(--primary)); }
+        .stat-data h3 { font-size: 1.75rem; font-weight: 700; color: var(--white); }
+        .stat-data p { color: var(--gray-light); font-size: 0.875rem; }
+        
+        /* Controls */
+        .controls-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(20px); margin-bottom: 2rem; }
+        .controls-grid { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; }
+        .date-control { display: flex; align-items: center; gap: 0.75rem; }
+        .date-control label { font-weight: 500; color: var(--gray-light); }
+        .date-input { padding: 0.75rem 1rem; background: rgba(15, 23, 42, 0.7); border: 1.5px solid rgba(16, 185, 129, 0.15); border-radius: 10px; color: var(--white); font-size: 0.9rem; font-family: inherit; transition: all 0.3s ease; }
+        .date-input:focus { outline: none; border-color: var(--success); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
+        
+        .bulk-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; font-family: inherit; }
+        .btn-success { background: linear-gradient(135deg, var(--success), var(--primary-dark)); color: var(--white); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3); }
+        .btn-success:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4); }
+        .btn-danger { background: linear-gradient(135deg, var(--error), var(--warning)); color: var(--white); box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3); }
+        .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(239, 68, 68, 0.4); }
+        .btn-primary { background: linear-gradient(135deg, var(--info), var(--primary-dark)); color: var(--white); box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(59, 130, 246, 0.4); }
+        .btn-secondary { background: rgba(148, 163, 184, 0.1); color: var(--gray-light); border: 1px solid rgba(148, 163, 184, 0.2); }
+        .btn-secondary:hover { background: rgba(148, 163, 184, 0.2); color: var(--white); }
+        
+        /* Table */
+        .table-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; overflow: hidden; backdrop-filter: blur(20px); margin-bottom: 2rem; }
+        .table-container { overflow-x: auto; }
+        .attendance-table { width: 100%; border-collapse: collapse; }
+        .attendance-table th { padding: 1rem; text-align: left; background: rgba(15, 23, 42, 0.5); color: var(--gray-light); font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid rgba(16, 185, 129, 0.1); }
+        .attendance-table th:first-child { width: 50px; }
+        .attendance-table td { padding: 1rem; border-bottom: 1px solid rgba(16, 185, 129, 0.1); vertical-align: middle; }
+        .attendance-table tr:last-child td { border-bottom: none; }
+        .attendance-table tr.present-row { background: rgba(16, 185, 129, 0.05); }
+        .attendance-table tr.absent-row { background: rgba(239, 68, 68, 0.05); }
+        
+        .checkbox-custom { width: 20px; height: 20px; cursor: pointer; accent-color: var(--success); }
+        .roll-no { font-weight: 600; color: var(--gray-light); width: 60px; }
+        
+        .student-info { display: flex; align-items: center; gap: 0.75rem; }
+        .student-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; }
+        
+        .attendance-progress { display: flex; align-items: center; gap: 0.75rem; }
+        .progress-bar-container { flex: 1; height: 8px; background: rgba(15, 23, 42, 0.5); border-radius: 4px; overflow: hidden; max-width: 120px; }
+        .progress-bar-fill { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
+        .progress-bar-fill.good { background: linear-gradient(90deg, var(--success), var(--success-light)); }
+        .progress-bar-fill.average { background: linear-gradient(90deg, var(--warning), var(--warning-light)); }
+        .progress-bar-fill.poor { background: linear-gradient(90deg, var(--error), var(--error-light)); }
+        .progress-text { font-size: 0.8rem; color: var(--gray-light); min-width: 60px; }
+        
+        .status-select { padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; border: none; transition: all 0.3s ease; }
+        .status-select.present { background: rgba(16, 185, 129, 0.2); color: var(--success-light); }
+        .status-select.absent { background: rgba(239, 68, 68, 0.2); color: var(--error-light); }
+        
+        .action-buttons { display: flex; gap: 0.5rem; }
+        .action-btn { width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .action-btn.present { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .action-btn.present:hover { background: var(--success); color: white; }
+        .action-btn.absent { background: rgba(239, 68, 68, 0.2); color: var(--error); }
+        .action-btn.absent:hover { background: var(--error); color: white; }
+        .action-btn.history { background: rgba(59, 130, 246, 0.2); color: var(--info); }
+        .action-btn.history:hover { background: var(--info); color: white; }
+        
+        /* Form Actions */
+        .form-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        
+        /* Calendar */
+        .calendar-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; padding: 1.5rem; backdrop-filter: blur(20px); }
+        .calendar-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; }
+        .calendar-day { padding: 0.75rem; border-radius: 10px; text-align: center; background: rgba(15, 23, 42, 0.5); transition: all 0.3s ease; }
+        .calendar-day.selected { border: 2px solid var(--success); }
+        .calendar-day.good { background: rgba(16, 185, 129, 0.2); }
+        .calendar-day.average { background: rgba(245, 158, 11, 0.2); }
+        .calendar-day.poor { background: rgba(239, 68, 68, 0.2); }
+        .calendar-day-number { font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem; }
+        .calendar-day-rate { font-size: 0.75rem; color: var(--gray-light); }
+        
+        .back-link { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--gray-light); text-decoration: none; font-weight: 500; transition: all 0.3s ease; }
+        .back-link:hover { color: var(--white); }
+        
+        @media (max-width: 768px) {
+            .header { padding: 0 1rem; }
+            .header-nav-link span { display: none; }
+            .main { padding-top: 80px; }
+            .page-title { font-size: 1.75rem; }
+            .controls-grid { flex-direction: column; align-items: stretch; }
+            .bulk-actions { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    
+    <header class="header">
+        <a href="/admin" class="header-brand">
+            <div class="header-brand-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="header-brand-text">SmartEdu Admin</span>
+        </a>
+        <nav class="header-nav">
+            <a href="/admin" class="header-nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="/admin/homework" class="header-nav-link"><i class="fas fa-book"></i><span>Homework</span></a>
+            <a href="/admin/send-notification" class="header-nav-link"><i class="fas fa-paper-plane"></i><span>Notifications</span></a>
+            <a href="/logout" class="header-nav-link"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </nav>
+    </header>
+    
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <div class="page-title-section">
+                    <div class="page-title-icon"><i class="fas fa-calendar-check"></i></div>
+                    <h1 class="page-title">Attendance</h1>
+                    <p class="page-subtitle">STD <%= classLevel %> - Manage student attendance</p>
+                </div>
+                <a href="/admin" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon total"><i class="fas fa-users"></i></div>
+                    <div class="stat-data">
+                        <h3><%= totalStudents %></h3>
+                        <p>Total Students</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon present"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-data">
+                        <h3><%= presentToday %></h3>
+                        <p>Present Today</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon absent"><i class="fas fa-times-circle"></i></div>
+                    <div class="stat-data">
+                        <h3><%= totalStudents - presentToday %></h3>
+                        <p>Absent Today</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon rate"><i class="fas fa-percentage"></i></div>
+                    <div class="stat-data">
+                        <h3><%= attendanceRate %>%</h3>
+                        <p>Attendance Rate</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Controls -->
+            <div class="controls-card">
+                <form method="POST" action="/admin/attendance/<%= classLevel %>" id="attendanceForm">
+                    <input type="hidden" name="selectedDate" id="selectedDateInput" value="<%= selectedDate %>" />
+                    
+                    <div class="controls-grid">
+                        <div class="date-control">
+                            <label for="attendanceDate">Select Date:</label>
+                            <input type="date" id="attendanceDate" class="date-input" value="<%= selectedDate %>" max="<%= new Date().toISOString().slice(0, 10) %>" />
+                        </div>
+                        
+                        <div class="bulk-actions">
+                            <button type="button" id="markAllPresent" class="btn btn-success">
+                                <i class="fas fa-check"></i> Mark All Present
+                            </button>
+                            <button type="button" id="markAllAbsent" class="btn btn-danger">
+                                <i class="fas fa-times"></i> Mark All Absent
+                            </button>
+                            <button type="button" id="exportAttendance" class="btn btn-primary">
+                                <i class="fas fa-download"></i> Export CSV
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Student Table -->
+                    <div class="table-card" style="margin-top: 1.5rem;">
+                        <div class="table-container">
+                            <table class="attendance-table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll" class="checkbox-custom" /></th>
+                                        <th>Roll No</th>
+                                        <th>Student Name</th>
+                                        <th>Monthly Attendance</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% studentStats.forEach(function(student, index) { %>
+                                    <tr class="student-row <%= student.status === 'present' ? 'present-row' : 'absent-row' %>">
+                                        <td><input type="checkbox" class="student-checkbox checkbox-custom" value="<%= student._id %>" /></td>
+                                        <td class="roll-no"><%= index + 1 %></td>
+                                        <td>
+                                            <div class="student-info">
+                                                <div class="student-avatar"><%= student.name.charAt(0).toUpperCase() %></div>
+                                                <span><%= student.name %></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="attendance-progress">
+                                                <div class="progress-bar-container">
+                                                    <div class="progress-bar-fill <%= student.attendancePercent >= 80 ? 'good' : student.attendancePercent >= 60 ? 'average' : 'poor' %>" style="width: <%= student.attendancePercent %>%"></div>
+                                                </div>
+                                                <span class="progress-text"><%= student.attendancePercent %>% (<%= student.presentCount %>/<%= student.totalDays %>)</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select name="status_<%= student._id %>" class="status-select <%= student.status %>">
+                                                <option value="present" <%= student.status === 'present' ? 'selected' : '' %>>Present</option>
+                                                <option value="absent" <%= student.status === 'absent' ? 'selected' : '' %>>Absent</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button type="button" class="action-btn present" data-student="<%= student._id %>" title="Mark Present">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                <button type="button" class="action-btn absent" data-student="<%= student._id %>" title="Mark Absent">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                                <a href="/admin/student-attendance/<%= student._id %>" class="action-btn history" title="View History">
+                                                    <i class="fas fa-history"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Save Attendance
+                        </button>
+                        <a href="/admin/attendance-report/<%= classLevel %>?date=<%= selectedDate %>" class="btn btn-primary">
+                            <i class="fas fa-chart-bar"></i> View Detailed Report
+                        </a>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Calendar -->
+            <div class="calendar-card">
+                <h3 class="calendar-title"><i class="fas fa-calendar-alt"></i> Monthly Overview - <%= new Date(selectedDate).toLocaleString('default', { month: 'long', year: 'numeric' }) %></h3>
+                <div class="calendar-grid">
+                    <% calendarDays.forEach(function(day) { %>
+                    <div class="calendar-day <%= day.dateStr === selectedDate ? 'selected' : '' %> <%= day.rate >= 80 ? 'good' : day.rate >= 60 ? 'average' : 'poor' %>">
+                        <div class="calendar-day-number"><%= day.day %></div>
+                        <div class="calendar-day-rate"><%= day.rate %>%</div>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const attendanceDate = document.getElementById('attendanceDate');
+            const selectedDateInput = document.getElementById('selectedDateInput');
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const studentCheckboxes = document.querySelectorAll('.student-checkbox');
+            const markAllPresent = document.getElementById('markAllPresent');
+            const markAllAbsent = document.getElementById('markAllAbsent');
+            const statusSelects = document.querySelectorAll('.status-select');
+            const quickActions = document.querySelectorAll('.action-btn.present, .action-btn.absent');
+            const studentRows = document.querySelectorAll('.student-row');
+
+            // Date change handler
+            attendanceDate.addEventListener('change', function() {
+                const newDate = this.value;
+                selectedDateInput.value = newDate;
+                window.location.href = '/admin/attendance/<%= classLevel %>?date=' + newDate;
+            });
+
+            // Select all functionality
+            selectAllCheckbox.addEventListener('change', function() {
+                studentCheckboxes.forEach(cb => cb.checked = this.checked);
+            });
+
+            // Individual checkbox change
+            studentCheckboxes.forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const allChecked = Array.from(studentCheckboxes).every(cb => cb.checked);
+                    const someChecked = Array.from(studentCheckboxes).some(cb => cb.checked);
+                    selectAllCheckbox.checked = allChecked;
+                    selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                });
+            });
+
+            // Bulk actions
+            markAllPresent.addEventListener('click', function() {
+                statusSelects.forEach(select => {
+                    select.value = 'present';
+                    select.className = 'status-select present';
+                });
+                updateRowStyles();
+            });
+
+            markAllAbsent.addEventListener('click', function() {
+                statusSelects.forEach(select => {
+                    select.value = 'absent';
+                    select.className = 'status-select absent';
+                });
+                updateRowStyles();
+            });
+
+            // Status select change
+            statusSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    this.className = 'status-select ' + this.value;
+                    updateRowStyles();
+                });
+            });
+
+            // Quick actions
+            quickActions.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const studentId = this.dataset.student;
+                    const status = this.classList.contains('present') ? 'present' : 'absent';
+                    const select = document.querySelector('select[name="status_' + studentId + '"]');
+                    if (select) {
+                        select.value = status;
+                        select.className = 'status-select ' + status;
+                        updateRowStyles();
+                    }
+                });
+            });
+
+            function updateRowStyles() {
+                studentRows.forEach(row => {
+                    const select = row.querySelector('.status-select');
+                    if (select) {
+                        row.className = 'student-row ' + (select.value === 'present' ? 'present-row' : 'absent-row');
+                    }
+                });
+            }
+
+            // Export functionality
+            document.getElementById('exportAttendance').addEventListener('click', function() {
+                const date = attendanceDate.value;
+                const data = Array.from(statusSelects).map(select => ({
+                    student: select.name.replace('status_', ''),
+                    status: select.value
+                }));
+
+                let csv = 'Student ID,Status\n';
+                data.forEach(item => {
+                    csv += item.student + ',' + item.status + '\n';
+                });
+
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'attendance_std_<%= classLevel %>_' + date + '.csv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+
+            // Initialize row styles
+            updateRowStyles();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Homework - SmartEdu Admin</title>
+    <link rel="stylesheet" href="/css/unified.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --success-light: #34d399;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --error: #ef4444;
+            --error-light: #f87171;
+            --info: #3b82f6;
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+            --dark-3: #334155;
+            --gray: #64748b;
+            --gray-light: #94a3b8;
+            --white: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--white);
+            overflow-x: hidden;
+        }
+        .bg-effects { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%); top: -150px; left: -150px; animation: pulse 8s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%); bottom: -100px; right: -100px; animation: pulse 10s ease-in-out infinite reverse; }
+        .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 12s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        .header { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(16, 185, 129, 0.2); display: flex; align-items: center; justify-content: space-between; padding: 0 2.5rem; z-index: 1000; }
+        .header-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .header-brand-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .header-brand-text { font-size: 1.35rem; font-weight: 700; background: linear-gradient(135deg, #fff 0%, var(--success-light) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-nav { display: flex; align-items: center; gap: 0.5rem; }
+        .header-nav-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.2rem; border-radius: 10px; text-decoration: none; color: var(--gray-light); font-weight: 500; font-size: 0.9rem; transition: all 0.3s ease; position: relative; }
+        .header-nav-link:hover { color: var(--white); background: rgba(16, 185, 129, 0.1); }
+        .header-nav-link.active { color: var(--white); background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(99, 102, 241, 0.15) 100%); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .main { padding-top: 90px; padding-bottom: 3rem; min-height: 100vh; position: relative; z-index: 1; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .page-title-section { animation: fadeInDown 0.6s ease; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .page-title-icon { width: 70px; height: 70px; background: linear-gradient(135deg, var(--success) 0%, var(--primary) 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; margin: 0 auto 1rem; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4); }
+        .page-title { font-size: 2.25rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+        .page-subtitle { color: var(--gray-light); font-size: 1rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.9rem 1.75rem; border-radius: 12px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; border: none; text-decoration: none; font-family: inherit; }
+        .btn-primary { background: linear-gradient(135deg, var(--success), var(--primary-dark)); color: var(--white); box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5); }
+        .btn-secondary { background: rgba(148, 163, 184, 0.1); color: var(--gray-light); border: 1px solid rgba(148, 163, 184, 0.2); }
+        .btn-secondary:hover { background: rgba(148, 163, 184, 0.2); color: var(--white); }
+        
+        .form-card { background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 20px; padding: 2rem; backdrop-filter: blur(20px); animation: fadeInUp 0.6s ease 0.2s backwards; margin-bottom: 1.5rem; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .form-block { margin-bottom: 1.75rem; padding-bottom: 1.75rem; border-bottom: 1px solid rgba(16, 185, 129, 0.1); }
+        .form-block:last-of-type { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .form-block-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
+        .form-block-icon { width: 42px; height: 42px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(99, 102, 241, 0.15)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--success-light); font-size: 1.1rem; }
+        .form-block-title { font-size: 1.05rem; font-weight: 600; color: var(--white); }
+        .form-block-title span { display: block; font-size: 0.8rem; color: var(--gray-light); font-weight: 400; margin-top: 0.125rem; }
+        .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+        .form-field { margin-bottom: 1rem; }
+        .form-field:last-child { margin-bottom: 0; }
+        .form-label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--gray-light); font-size: 0.875rem; }
+        .form-input { width: 100%; padding: 0.875rem 1rem; background: rgba(15, 23, 42, 0.7); border: 1.5px solid rgba(16, 185, 129, 0.15); border-radius: 10px; color: var(--white); font-size: 0.9rem; font-family: inherit; transition: all 0.3s ease; }
+        .form-input:focus { outline: none; border-color: var(--success); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); background: rgba(15, 23, 42, 0.9); }
+        .form-input::placeholder { color: var(--gray); }
+        textarea.form-input { min-height: 120px; resize: vertical; line-height: 1.6; }
+        select.form-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1.25rem; padding-right: 2.5rem; }
+        
+        /* File Upload */
+        .upload-area { border: 2px dashed rgba(16, 185, 129, 0.3); border-radius: 16px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s ease; background: rgba(15, 23, 42, 0.4); }
+        .upload-area:hover { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        .upload-area.dragover { border-color: var(--success); background: rgba(16, 185, 129, 0.1); }
+        .upload-icon { font-size: 2.5rem; color: var(--success); margin-bottom: 0.75rem; }
+        .upload-area h4 { color: var(--white); margin-bottom: 0.25rem; }
+        .upload-area p { color: var(--gray-light); font-size: 0.875rem; }
+        .file-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        .file-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 10px; }
+        .file-item i { color: var(--success); margin-right: 0.5rem; }
+        .file-item span { color: var(--white); font-size: 0.875rem; }
+        .file-item .remove-btn { background: none; border: none; color: var(--error); cursor: pointer; padding: 0.25rem; }
+        
+        .form-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(16, 185, 129, 0.1); }
+        
+        @media (max-width: 768px) { 
+            .header { padding: 0 1rem; } 
+            .header-nav-link span { display: none; } 
+            .main { padding-top: 80px; } 
+            .page-title { font-size: 1.75rem; }
+            .form-actions { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effects">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <header class="header">
+        <a href="/admin" class="header-brand">
+            <div class="header-brand-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="header-brand-text">SmartEdu Admin</span>
+        </a>
+        <nav class="header-nav">
+            <a href="/admin" class="header-nav-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="/admin/send-notification" class="header-nav-link"><i class="fas fa-paper-plane"></i><span>Notifications</span></a>
+            <a href="/admin/homework" class="header-nav-link active"><i class="fas fa-book"></i><span>Homework</span></a>
+            <a href="/logout" class="header-nav-link"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </nav>
+    </header>
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <div class="page-title-section">
+                    <div class="page-title-icon"><i class="fas fa-plus-circle"></i></div>
+                    <h1 class="page-title">Create Homework</h1>
+                    <p class="page-subtitle">Create a new homework assignment for your students</p>
+                </div>
+                <a href="/admin/homework" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Homework</a>
+            </div>
+            
+            <form method="POST" action="/admin/homework" enctype="multipart/form-data">
+                <div class="form-card">
+                    <div class="form-block">
+                        <div class="form-block-header">
+                            <div class="form-block-icon"><i class="fas fa-info-circle"></i></div>
+                            <div class="form-block-title">Basic Information<span>Enter the homework details</span></div>
+                        </div>
+                        <div class="form-field">
+                            <label for="title" class="form-label">Title *</label>
+                            <input type="text" id="title" name="title" class="form-input" placeholder="Enter homework title" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="subject" class="form-label">Subject *</label>
+                                <select id="subject" name="subject" class="form-input" required>
+                                    <option value="">Select Subject</option>
+                                    <% if (subjects && subjects.length > 0) { %>
+                                        <% subjects.forEach(function(sub) { %>
+                                            <% if (sub && sub._id && sub.classLevel && sub.name) { %>
+                                                <option value="<%= sub._id %>">STD <%= sub.classLevel %> - <%= sub.name %></option>
+                                            <% } %>
+                                        <% }); %>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="chapter" class="form-label">Chapter (Optional)</label>
+                                <select id="chapter" name="chapter" class="form-input">
+                                    <option value="">Select Chapter</option>
+                                    <% if (chapters && chapters.length > 0) { %>
+                                        <% chapters.forEach(function(ch) { %>
+                                            <% if (ch && ch._id && ch.subject && ch.subject._id && ch.title) { %>
+                                                <option value="<%= ch._id %>" data-subject="<%= ch.subject._id %>"><%= ch.subject.name %> - <%= ch.title %></option>
+                                            <% } %>
+                                        <% }); %>
+                                    <% } %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="description" class="form-label">Description *</label>
+                            <textarea id="description" name="description" class="form-input" placeholder="Enter detailed homework instructions" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-card">
+                    <div class="form-block">
+                        <div class="form-block-header">
+                            <div class="form-block-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="form-block-title">Schedule & Settings<span>Set due date and grading options</span></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="dueDate" class="form-label">Due Date *</label>
+                                <input type="datetime-local" id="dueDate" name="dueDate" class="form-input" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="maxMarks" class="form-label">Maximum Marks *</label>
+                                <input type="number" id="maxMarks" name="maxMarks" class="form-input" placeholder="100" min="1" required>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="isActive" class="form-label">Status</label>
+                            <select id="isActive" name="isActive" class="form-input">
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-card">
+                    <div class="form-block">
+                        <div class="form-block-header">
+                            <div class="form-block-icon"><i class="fas fa-paperclip"></i></div>
+                            <div class="form-block-title">Attachments<span>Upload supporting files for the homework</span></div>
+                        </div>
+                        <div class="upload-area" id="uploadArea">
+                            <input type="file" name="attachments" id="fileInput" multiple accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png" style="display: none;">
+                            <div class="upload-content">
+                                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                <h4>Upload Files</h4>
+                                <p>Drag & drop files here or click to browse</p>
+                                <p style="font-size: 0.75rem; margin-top: 0.5rem;">Supported: PDF, DOC, DOCX, TXT, JPG, PNG</p>
+                            </div>
+                        </div>
+                        <div id="fileList" class="file-list"></div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Create Homework</button>
+                    <a href="/admin/homework" class="btn btn-secondary"><i class="fas fa-times"></i> Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const subjectSelect = document.getElementById('subject');
+            const chapterSelect = document.getElementById('chapter');
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileList = document.getElementById('fileList');
+            
+            // Filter chapters based on selected subject
+            subjectSelect.addEventListener('change', function() {
+                const selectedSubject = this.value;
+                const options = chapterSelect.querySelectorAll('option');
+                
+                options.forEach(option => {
+                    if (option.value === '' || option.dataset.subject === selectedSubject) {
+                        option.style.display = 'block';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+                
+                chapterSelect.value = '';
+            });
+            
+            // File upload handling
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function(e) {
+                handleFiles(e.target.files);
+            });
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            function handleFiles(files) {
+                Array.from(files).forEach(file => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    fileItem.innerHTML = `
+                        <div><i class="fas fa-file"></i><span>${file.name}</span></div>
+                        <button type="button" class="remove-btn" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+                    `;
+                    fileList.appendChild(fileItem);
+                });
+            }
+            
+            // Set default due date to 7 days from now
+            const dueDateInput = document.getElementById('dueDate');
+            const defaultDate = new Date();
+            defaultDate.setDate(defaultDate.getDate() + 7);
+            dueDateInput.value = defaultDate.toISOString().slice(0, 16);
+        });
+    </script>
+</body>
+</html>
